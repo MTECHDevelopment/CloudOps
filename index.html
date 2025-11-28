@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="pt-BR">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Science Match</title>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .app-container {
+      width: 100%;
+      max-width: 450px;
+      padding: 20px;
+    }
+    
+    /* Profile Creation Screen */
+    .profile-screen {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .profile-screen.hidden {
+      display: none;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .profile-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 40px 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    
+    .profile-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .profile-icon {
+      font-size: 72px;
+      margin-bottom: 16px;
+      display: block;
+    }
+    
+    .profile-header h1 {
+      color: #2d3748;
+      font-size: 28px;
+      margin: 0 0 8px 0;
+      font-weight: 800;
+    }
+    
+    .profile-header p {
+      color: #718096;
+      font-size: 15px;
+      margin: 0;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      color: #4a5568;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+    
+    .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+    
+    .interest-chip {
+      padding: 10px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      font-size: 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #ffffff;
+      color: #4a5568;
+    }
+    
+    .interest-chip:hover {
+      border-color: #667eea;
+      transform: translateY(-2px);
+    }
+    
+    .interest-chip.selected {
+      background: #667eea;
+      border-color: #667eea;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 24px;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    /* Main App Screen */
+    .main-screen {
+      display: none;
+    }
+    
+    .main-screen.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    
+    .profile-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .profile-badge:hover {
+      transform: scale(1.1);
+      background: rgba(255, 255, 255, 0.35);
+    }
+    
+    h1 {
+      color: #ffffff;
+      font-size: 42px;
+      margin: 0 0 8px 0;
+      font-weight: 800;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .subtitle {
+      color: #f0e6ff;
+      font-size: 16px;
+      margin: 0;
+    }
+    
+    .stats-bar {
+      display: flex;
+      justify-content: space-around;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-value {
+      display: block;
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    
+    .stat-label {
+      display: block;
+      font-size: 12px;
+      color: #f0e6ff;
+      margin-top: 4px;
+    }
+    
+    .card-container {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      margin-bottom: 20px;
+    }
+    
+    .card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      padding: 30px;
+      cursor: grab;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      user-select: none;
+      overflow: hidden;
+    }
+    
+    .card.dragging {
+      cursor: grabbing;
+    }
+    
+    .card.swipe-left {
+      animation: swipeLeft 0.4s ease-out forwards;
+    }
+    
+    .card.swipe-right {
+      animation: swipeRight 0.4s ease-out forwards;
+    }
+    
+    .card.swipe-up {
+      animation: swipeUp 0.4s ease-out forwards;
+    }
+    
+    @keyframes swipeLeft {
+      to {
+        transform: translateX(-150%) rotate(-30deg);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes swipeRight {
+      to {
+        transform: translateX(150%) rotate(30deg);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes swipeUp {
+      to {
+        transform: translateY(-150%) rotate(10deg);
+        opacity: 0;
+      }
+    }
+    
+    .match-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    
+    .field-tag {
+      display: inline-block;
+      background: #667eea;
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    
+    .card h2 {
+      color: #2d3748;
+      font-size: 22px;
+      margin: 0 0 12px 0;
+      line-height: 1.3;
+    }
+    
+    .authors {
+      color: #718096;
+      font-size: 14px;
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+    
+    .journal {
+      color: #4a5568;
+      font-size: 13px;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+    
+    .abstract {
+      color: #4a5568;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .card-stats {
+      display: flex;
+      gap: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e8f0;
+      margin-bottom: 12px;
+    }
+    
+    .card-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #718096;
+      font-size: 13px;
+    }
+    
+    .quick-note {
+      background: #f7fafc;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+    
+    .quick-note input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      color: #4a5568;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    
+    .quick-note input:focus {
+      outline: none;
+    }
+    
+    .quick-note input::placeholder {
+      color: #a0aec0;
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .control-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .control-btn:hover {
+      transform: scale(1.1);
+    }
+    
+    .control-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .skip-btn {
+      background: #ffffff;
+      color: #ef4444;
+    }
+    
+    .super-btn {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: #ffffff;
+      width: 72px;
+      height: 72px;
+      font-size: 32px;
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    
+    .save-btn {
+      background: #ffffff;
+      color: #10b981;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 6px;
+      margin-top: 24px;
+    }
+    
+    .tab {
+      flex: 1;
+      padding: 12px;
+      background: transparent;
+      border: none;
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .tab.active {
+      background: #ffffff;
+      color: #667eea;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .tab-content {
+      display: none;
+      margin-top: 16px;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .saved-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .saved-item {
+      padding: 16px;
+      background: #f7fafc;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border-left: 4px solid #667eea;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .saved-item:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .saved-item h4 {
+      color: #2d3748;
+      font-size: 15px;
+      margin: 0 0 8px 0;
+    }
+    
+    .saved-item-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #718096;
+      font-size: 13px;
+    }
+    
+    .match-score {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    
+    .saved-note {
+      margin-top: 8px;
+      padding: 8px;
+      background: #ffffff;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #4a5568;
+      font-style: italic;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #a0aec0;
+    }
+    
+    .empty-state-icon {
+      font-size: 64px;
+      margin-bottom: 12px;
+    }
+    
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: rgba(0, 0, 0, 0.9);
+      color: #ffffff;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+    
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    
+    .reset-btn {
+      margin-top: 16px;
+      padding: 12px;
+      background: rgba(239, 68, 68, 0.1);
+      color: #ffffff;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+    
+    .reset-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="app-container"><!-- Profile Creation Screen -->
+   <div class="profile-screen" id="profileScreen">
+    <div class="profile-card">
+     <div class="profile-header"><span class="profile-icon">🔬</span>
+      <h1>Bem-vindo ao Science Match!</h1>
+      <p>Crie seu perfil de pesquisador</p>
+     </div>
+     <form id="profileForm">
+      <div class="form-group"><label for="userName" class="form-label">Nome</label> <input type="text" id="userName" class="form-input" placeholder="Seu nome completo" required>
+      </div>
+      <div class="form-group"><label for="userInstitution" class="form-label">Instituição</label> <input type="text" id="userInstitution" class="form-input" placeholder="Universidade ou instituto de pesquisa" required>
+      </div>
+      <div class="form-group"><label for="userBio" class="form-label">Bio</label> <textarea id="userBio" class="form-textarea" placeholder="Conte um pouco sobre sua área de pesquisa..." required></textarea>
+      </div>
+      <div class="form-group"><label class="form-label">Áreas de Interesse</label>
+       <div class="interests-grid" id="interestsGrid">
+        <div class="interest-chip" data-interest="Biotecnologia">
+         🧬 Biotecnologia
+        </div>
+        <div class="interest-chip" data-interest="Física Quântica">
+         ⚛️ Física Quântica
+        </div>
+        <div class="interest-chip" data-interest="Neurociência">
+         🧠 Neurociência
+        </div>
+        <div class="interest-chip" data-interest="Energia">
+         ⚡ Energia
+        </div>
+        <div class="interest-chip" data-interest="Farmacologia">
+         💊 Farmacologia
+        </div>
+        <div class="interest-chip" data-interest="Química">
+         🧪 Química
+        </div>
+        <div class="interest-chip" data-interest="Astrofísica">
+         🌌 Astrofísica
+        </div>
+        <div class="interest-chip" data-interest="IA">
+         🤖 IA
+        </div>
+       </div>
+      </div><button type="submit" class="btn-primary"> Começar a Explorar </button>
+     </form>
+    </div>
+   </div><!-- Main App Screen -->
+   <main class="main-screen" id="mainScreen">
+    <header>
+     <h1>Science Match</h1>
+     <p class="subtitle">Descubra sua próxima leitura científica</p>
+     <div class="profile-badge" id="profileBadge" title="Ver perfil">
+      👤
+     </div>
+    </header>
+    <div class="stats-bar">
+     <div class="stat-item"><span class="stat-value" id="viewedCount">0</span> <span class="stat-label">Vistos</span>
+     </div>
+     <div class="stat-item"><span class="stat-value" id="savedCount">0</span> <span class="stat-label">Salvos</span>
+     </div>
+     <div class="stat-item"><span class="stat-value" id="superCount">0</span> <span class="stat-label">Super Match</span>
+     </div>
+    </div>
+    <div class="card-container" id="cardContainer"></div>
+    <div class="controls"><button class="control-btn skip-btn" id="skipBtn" aria-label="Pular artigo">✕</button> <button class="control-btn super-btn" id="superBtn" aria-label="Super match" title="Super Match - Prioridade alta">⭐</button> <button class="control-btn save-btn" id="saveBtn" aria-label="Salvar artigo">❤</button>
+    </div>
+    <div class="tabs"><button class="tab active" data-tab="saved">💾 Salvos</button> <button class="tab" data-tab="super">⭐ Super</button>
+    </div>
+    <div class="tab-content active" data-content="saved">
+     <div class="saved-section" id="savedList">
+      <div class="empty-state">
+       <div class="empty-state-icon">
+        🔬
+       </div>
+       <p>Nenhum artigo salvo ainda.<br>
+        Comece explorando!</p>
+      </div>
+     </div>
+    </div>
+    <div class="tab-content" data-content="super">
+     <div class="saved-section" id="superList">
+      <div class="empty-state">
+       <div class="empty-state-icon">
+        ⭐
+       </div>
+       <p>Nenhum super match ainda.<br>
+        Use ⭐ para priorizar!</p>
+      </div>
+     </div>
+    </div><button class="reset-btn" id="resetBtn">🔄 Resetar Aplicação</button>
+   </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    const articles = [
+      {
+        id: "1",
+        title: "Edição de Genes CRISPR: Avanços e Desafios Éticos",
+        authors: "Zhang, F., Jiang, W., Zhou, H.",
+        journal: "Nature Genetics, 2023",
+        field: "Biotecnologia",
+        abstract: "Este estudo explora os mais recentes desenvolvimentos na tecnologia CRISPR-Cas9 e suas aplicações terapêuticas. Discutimos casos de sucesso no tratamento de doenças genéticas raras e os desafios éticos associados à edição germline. Os resultados demonstram eficácia de 94% em modelos murinos.",
+        citations: 847,
+        year: 2023
+      },
+      {
+        id: "2",
+        title: "Redes Neurais Quânticas: Uma Nova Fronteira em IA",
+        authors: "Chen, L., Kumar, A., Martinez, R.",
+        journal: "Physical Review Letters, 2023",
+        field: "Física Quântica",
+        abstract: "Apresentamos uma arquitetura inovadora de redes neurais que utiliza superposição quântica para processamento paralelo massivo. Os experimentos mostram ganhos de velocidade de até 10.000x em problemas específicos de otimização combinatória.",
+        citations: 523,
+        year: 2023
+      },
+      {
+        id: "3",
+        title: "Microbioma Intestinal e Saúde Mental: Conexões Emergentes",
+        authors: "Silva, M., O'Brien, K., Tanaka, Y.",
+        journal: "Cell Host & Microbe, 2023",
+        field: "Neurociência",
+        abstract: "Investigamos a relação bidirecional entre composição do microbioma intestinal e distúrbios psiquiátricos. Identificamos cepas bacterianas específicas associadas a redução de sintomas depressivos em 67% dos participantes.",
+        citations: 1205,
+        year: 2023
+      },
+      {
+        id: "4",
+        title: "Fusão Nuclear: Progresso Rumo à Energia Limpa Ilimitada",
+        authors: "Anderson, T., Lee, S., Dubois, P.",
+        journal: "Science, 2023",
+        field: "Energia",
+        abstract: "Relatamos o primeiro experimento de fusão nuclear a alcançar Q>1.5, produzindo 50% mais energia do que foi consumida. Este trabalho marca um passo crucial para reatores de fusão comercialmente viáveis.",
+        citations: 2341,
+        year: 2023
+      },
+      {
+        id: "5",
+        title: "Aprendizado de Máquina para Descoberta de Novos Fármacos",
+        authors: "Patel, N., Wong, J., Kowalski, B.",
+        journal: "Nature Medicine, 2023",
+        field: "Farmacologia",
+        abstract: "Desenvolvemos um framework de ML que prediz afinidade de ligação proteína-ligante. O sistema identificou 12 candidatos promissores para Alzheimer, reduzindo o tempo de screening de 4 anos para 8 meses.",
+        citations: 891,
+        year: 2023
+      },
+      {
+        id: "6",
+        title: "Captura de Carbono com Materiais Metalo-Orgânicos",
+        authors: "Johnson, R., Kim, H., Rossi, A.",
+        journal: "Energy & Environmental Science, 2023",
+        field: "Química",
+        abstract: "Sintetizamos um novo MOF capaz de capturar CO₂ com eficiência 300% superior. O material opera em temperatura ambiente e pode ser regenerado com baixo consumo energético.",
+        citations: 678,
+        year: 2023
+      },
+      {
+        id: "7",
+        title: "Plasticidade Sináptica e Memória de Longo Prazo",
+        authors: "Nakamura, K., Bergman, E., Santos, L.",
+        journal: "Neuron, 2023",
+        field: "Neurociência",
+        abstract: "Mapeamos mudanças estruturais durante consolidação de memórias. Identificamos proteínas-chave e desenvolvemos intervenções que melhoram retenção de memória em 45%.",
+        citations: 1456,
+        year: 2023
+      },
+      {
+        id: "8",
+        title: "Matéria Escura: Novas Evidências de Detecção Direta",
+        authors: "Morales, C., Ivanov, D., Zhao, X.",
+        journal: "Physical Review D, 2023",
+        field: "Astrofísica",
+        abstract: "Apresentamos dados de 5 anos mostrando eventos consistentes com WIMPs na faixa de 50-100 GeV/c², oferecendo a evidência mais forte de matéria escura até hoje.",
+        citations: 3102,
+        year: 2023
+      }
+    ];
+
+    let currentIndex = 0;
+    let userProfile = null;
+    let allActions = [];
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let isOperationInProgress = false;
+    let currentNote = "";
+    let selectedInterests = [];
+
+    function init() {
+      loadData();
+      setupEventListeners();
+      
+      if (userProfile) {
+        showMainScreen();
+      }
+    }
+
+    function loadData() {
+      const storedProfile = localStorage.getItem('scienceMatchProfile');
+      const storedActions = localStorage.getItem('scienceMatchActions');
+      
+      if (storedProfile) {
+        userProfile = JSON.parse(storedProfile);
+      }
+      
+      if (storedActions) {
+        allActions = JSON.parse(storedActions);
+      }
+    }
+
+    function saveData() {
+      if (userProfile) {
+        localStorage.setItem('scienceMatchProfile', JSON.stringify(userProfile));
+      }
+      localStorage.setItem('scienceMatchActions', JSON.stringify(allActions));
+    }
+
+    function setupEventListeners() {
+      // Profile form
+      const interestChips = document.querySelectorAll('.interest-chip');
+      interestChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          const interest = chip.dataset.interest;
+          if (chip.classList.contains('selected')) {
+            chip.classList.remove('selected');
+            selectedInterests = selectedInterests.filter(i => i !== interest);
+          } else {
+            chip.classList.add('selected');
+            selectedInterests.push(interest);
+          }
+        });
+      });
+
+      document.getElementById('profileForm').addEventListener('submit', handleProfileSubmit);
+      
+      // Main app controls
+      document.getElementById('skipBtn').addEventListener('click', () => handleSwipe('skip'));
+      document.getElementById('saveBtn').addEventListener('click', () => handleSwipe('save'));
+      document.getElementById('superBtn').addEventListener('click', () => handleSwipe('super'));
+      
+      // Tabs
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          
+          tab.classList.add('active');
+          const tabName = tab.dataset.tab;
+          document.querySelector(`[data-content="${tabName}"]`).classList.add('active');
+        });
+      });
+      
+      document.getElementById('profileBadge').addEventListener('click', showProfileInfo);
+      document.getElementById('resetBtn').addEventListener('click', resetApp);
+    }
+
+    function handleProfileSubmit(e) {
+      e.preventDefault();
+      
+      if (selectedInterests.length === 0) {
+        showToast('Selecione pelo menos uma área de interesse');
+        return;
+      }
+      
+      userProfile = {
+        name: document.getElementById('userName').value,
+        institution: document.getElementById('userInstitution').value,
+        bio: document.getElementById('userBio').value,
+        interests: selectedInterests
+      };
+      
+      saveData();
+      showToast('Perfil criado com sucesso! 🎉');
+      
+      setTimeout(() => {
+        showMainScreen();
+      }, 500);
+    }
+
+    function showMainScreen() {
+      document.getElementById('profileScreen').classList.add('hidden');
+      document.getElementById('mainScreen').classList.add('active');
+      updateStats();
+      renderSavedLists();
+      renderCard();
+    }
+
+    function calculateMatchScore(article) {
+      if (!userProfile || !userProfile.interests) return 50;
+      
+      const hasMatch = userProfile.interests.includes(article.field);
+      return hasMatch ? Math.floor(85 + Math.random() * 15) : Math.floor(40 + Math.random() * 30);
+    }
+
+    function renderCard() {
+      const container = document.getElementById('cardContainer');
+      container.innerHTML = '';
+      
+      if (currentIndex >= articles.length) {
+        container.innerHTML = `
+          <div class="empty-state" style="background: #ffffff; border-radius: 24px; padding: 60px 20px; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+            <div class="empty-state-icon">🎉</div>
+            <h2 style="color: #2d3748; margin: 16px 0;">Todos os artigos explorados!</h2>
+            <p style="color: #718096;">Você visualizou todos os artigos disponíveis.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      const article = articles[currentIndex];
+      const matchScore = calculateMatchScore(article);
+      
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="match-badge">${matchScore}% Match</div>
+        <span class="field-tag">${article.field}</span>
+        <h2>${article.title}</h2>
+        <p class="authors">${article.authors}</p>
+        <p class="journal">${article.journal}</p>
+        <p class="abstract">${article.abstract}</p>
+        <div class="card-stats">
+          <span class="card-stat">📅 ${article.year}</span>
+          <span class="card-stat">📊 ${article.citations} citações</span>
+        </div>
+        <div class="quick-note">
+          <input type="text" placeholder="💭 Adicionar nota rápida..." id="noteInput">
+        </div>
+      `;
+      
+      container.appendChild(card);
+      setupDragListeners(card);
+      
+      document.getElementById('noteInput').addEventListener('input', (e) => {
+        currentNote = e.target.value;
+      });
+    }
+
+    function setupDragListeners(card) {
+      const onStart = (e) => {
+        if (isOperationInProgress) return;
+        isDragging = true;
+        card.classList.add('dragging');
+        startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+      };
+      
+      const onMove = (e) => {
+        if (!isDragging) return;
+        currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+        const deltaX = currentX - startX;
+        const deltaY = currentY - startY;
+        const rotation = deltaX * 0.1;
+        card.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${rotation}deg)`;
+      };
+      
+      const onEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        card.classList.remove('dragging');
+        const deltaX = currentX - startX;
+        const deltaY = currentY - startY;
+        
+        if (deltaY < -100) {
+          handleSwipe('super');
+        } else if (Math.abs(deltaX) > 100) {
+          if (deltaX > 0) {
+            handleSwipe('save');
+          } else {
+            handleSwipe('skip');
+          }
+        } else {
+          card.style.transform = '';
+        }
+      };
+      
+      card.addEventListener('mousedown', onStart);
+      card.addEventListener('touchstart', onStart);
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('touchmove', onMove);
+      document.addEventListener('mouseup', onEnd);
+      document.addEventListener('touchend', onEnd);
+    }
+
+    function handleSwipe(action) {
+      if (isOperationInProgress || currentIndex >= articles.length) return;
+      isOperationInProgress = true;
+      
+      const card = document.querySelector('.card');
+      const article = articles[currentIndex];
+      const matchScore = calculateMatchScore(article);
+      
+      if (card) {
+        if (action === 'skip') card.classList.add('swipe-left');
+        else if (action === 'save') card.classList.add('swipe-right');
+        else if (action === 'super') card.classList.add('swipe-up');
+      }
+      
+      const actionEmoji = action === 'skip' ? '👋' : action === 'super' ? '⭐' : '❤️';
+      const actionText = action === 'skip' ? 'Pulado' : action === 'super' ? 'Super Match!' : 'Salvo';
+      showToast(`${actionEmoji} ${actionText}`);
+      
+      allActions.push({
+        articleId: article.id,
+        action: action,
+        timestamp: new Date().toISOString(),
+        matchScore: matchScore,
+        notes: currentNote || ''
+      });
+      
+      saveData();
+      
+      setTimeout(() => {
+        currentIndex++;
+        currentNote = '';
+        updateStats();
+        renderSavedLists();
+        renderCard();
+        isOperationInProgress = false;
+      }, 400);
+    }
+
+    function updateStats() {
+      const viewed = allActions.length;
+      const saved = allActions.filter(a => a.action === 'save').length;
+      const supers = allActions.filter(a => a.action === 'super').length;
+      
+      document.getElementById('viewedCount').textContent = viewed;
+      document.getElementById('savedCount').textContent = saved;
+      document.getElementById('superCount').textContent = supers;
+    }
+
+    function renderSavedLists() {
+      const savedActions = allActions.filter(a => a.action === 'save');
+      const superActions = allActions.filter(a => a.action === 'super');
+      
+      renderList('savedList', savedActions, '🔬', 'Nenhum artigo salvo ainda.<br>Comece explorando!');
+      renderList('superList', superActions, '⭐', 'Nenhum super match ainda.<br>Use ⭐ para priorizar!');
+    }
+
+    function renderList(containerId, actions, emptyIcon, emptyText) {
+      const container = document.getElementById(containerId);
+      
+      if (actions.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">${emptyIcon}</div>
+            <p>${emptyText}</p>
+          </div>
+        `;
+        return;
+      }
+      
+      const sortedActions = [...actions].sort((a, b) => b.matchScore - a.matchScore);
+      
+      container.innerHTML = sortedActions.map(action => {
+        const article = articles.find(a => a.id === action.articleId);
+        if (!article) return '';
+        
+        return `
+          <div class="saved-item">
+            <h4>${article.title}</h4>
+            <div class="saved-item-meta">
+              <span>${article.field} • ${article.year}</span>
+              <span class="match-score">${action.matchScore}% Match</span>
+            </div>
+            ${action.notes ? `<div class="saved-note">💭 ${action.notes}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function showProfileInfo() {
+      if (!userProfile) return;
+      
+      const interests = userProfile.interests.join(', ');
+      showToast(`👤 ${userProfile.name} • ${userProfile.institution}`);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    function resetApp() {
+      if (confirm('Tem certeza que deseja resetar toda a aplicação? Todos os dados serão perdidos.')) {
+        localStorage.removeItem('scienceMatchProfile');
+        localStorage.removeItem('scienceMatchActions');
+        location.reload();
+      }
+    }
+
+    // Initialize app
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a5cabb066d564b4',t:'MTc2NDM2MjMyNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
