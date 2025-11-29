@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matches - CloudOps</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cloud"></i>
+                <span>CloudOps</span>
+            </a>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="matches.html">
+                        <i class="fas fa-heart"></i>
+                        <span>Matches</span>
+                        <span class="badge">3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="minhas-pesquisas.html">
+                        <i class="fas fa-flask"></i>
+                        <span>Minhas Pesquisas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="oportunidades.html">
+                        <i class="fas fa-search"></i>
+                        <span>Oportunidades</span>
+                        <span class="badge">12</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="grupos.html">
+                        <i class="fas fa-users"></i>
+                        <span>Meus Grupos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="votacoes.html">
+                        <i class="fas fa-vote-yea"></i>
+                        <span>Votações</span>
+                        <span class="badge warning">1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="notificacoes.html">
+                        <i class="fas fa-bell"></i>
+                        <span>Notificações</span>
+                        <span class="badge">5</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-divider"></div>
+            
+            <ul>
+                <li>
+                    <a href="perfil.html">
+                        <i class="fas fa-user"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="configuracoes.html">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="index.html" class="logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <!-- Top Bar -->
+        <header class="dashboard-header">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar matches...">
+            </div>
+            
+            <div class="header-actions">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">5</span>
+                </button>
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name">João Silva</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Matches Content -->
+        <div class="dashboard-content">
+            <section class="page-header">
+                <div class="page-title">
+                    <h1><i class="fas fa-heart"></i> Seus Matches</h1>
+                    <p>Pesquisadores compatíveis com seu perfil e pesquisas</p>
+                </div>
+                <div class="page-filters">
+                    <select class="filter-select">
+                        <option value="all">Todas as pesquisas</option>
+                        <option value="pesquisa1">Impactos Ambientais</option>
+                        <option value="pesquisa2">ML em Diagnóstico</option>
+                    </select>
+                    <select class="filter-select">
+                        <option value="score">Maior compatibilidade</option>
+                        <option value="recent">Mais recentes</option>
+                        <option value="area">Por área</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Matches Grid - Tinder Style -->
+            <section class="matches-container">
+                <!-- Match Card Stack -->
+                <div class="match-stack" id="matchStack">
+                    <!-- Card 1 -->
+                    <div class="match-card" data-id="1">
+                        <div class="match-card-header">
+                            <div class="match-percentage">
+                                <span class="percentage">98%</span>
+                                <span class="label">Match</span>
+                            </div>
+                            <div class="match-badge new">Novo</div>
+                        </div>
+                        
+                        <div class="match-card-avatar">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        
+                        <div class="match-card-info">
+                            <h3>Maria Santos</h3>
+                            <p class="match-role">Doutoranda em Biologia Molecular</p>
+                            <p class="match-institution"><i class="fas fa-university"></i> USP - São Paulo</p>
+                            
+                            <div class="match-tags">
+                                <span class="tag match-tag">Genética</span>
+                                <span class="tag match-tag">Bioquímica</span>
+                                <span class="tag match-tag">Python</span>
+                            </div>
+                            
+                            <div class="match-stats">
+                                <div class="match-stat">
+                                    <i class="fas fa-book"></i>
+                                    <span>12 publicações</span>
+                                </div>
+                                <div class="match-stat">
+                                    <i class="fas fa-language"></i>
+                                    <span>Inglês Fluente</span>
+                                </div>
+                            </div>
+                            
+                            <div class="compatibility-breakdown">
+                                <h4>Compatibilidade</h4>
+                                <div class="compatibility-item">
+                                    <span class="comp-label">Área de Interesse</span>
+                                    <div class="comp-bar">
+                                        <div class="comp-fill" style="width: 100%"></div>
+                                    </div>
+                                    <span class="comp-value">100%</span>
+                                </div>
+                                <div class="compatibility-item">
+                                    <span class="comp-label">Habilidades</span>
+                                    <div class="comp-bar">
+                                        <div class="comp-fill" style="width: 95%"></div>
+                                    </div>
+                                    <span class="comp-value">95%</span>
+                                </div>
+                                <div class="compatibility-item">
+                                    <span class="comp-label">Idiomas</span>
+                                    <div class="comp-bar">
+                                        <div class="comp-fill" style="width: 100%"></div>
+                                    </div>
+                                    <span class="comp-value">100%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="match-card-actions">
+                            <button class="action-btn reject" onclick="rejectMatch(1)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button class="action-btn info" onclick="viewProfile(1)">
+                                <i class="fas fa-info"></i>
+                            </button>
+                            <button class="action-btn accept" onclick="acceptMatch(1)">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="match-card" data-id="2">
+                        <div class="match-card-header">
+                            <div class="match-percentage">
+                                <span class="percentage">95%</span>
+                                <span class="label">Match</span>
+                            </div>
+                        </div>
+                        
+                        <div class="match-card-avatar professor">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        
+                        <div class="match-card-info">
+                            <h3>Prof. Carlos Oliveira</h3>
+                            <p class="match-role">Professor Titular - Física Quântica</p>
+                            <p class="match-institution"><i class="fas fa-university"></i> UNICAMP - Campinas</p>
+                            
+                            <div class="match-tags">
+                                <span class="tag match-tag">Física</span>
+                                <span class="tag match-tag">Computação Quântica</span>
+                                <span class="tag match-tag">MATLAB</span>
+                            </div>
+                            
+                            <div class="match-stats">
+                                <div class="match-stat">
+                                    <i class="fas fa-book"></i>
+                                    <span>87 publicações</span>
+                                </div>
+                                <div class="match-stat">
+                                    <i class="fas fa-award"></i>
+                                    <span>CNPq 1A</span>
+                                </div>
+                            </div>
+                            
+                            <div class="compatibility-breakdown">
+                                <h4>Compatibilidade</h4>
+                                <div class="compatibility-item">
+                                    <span class="comp-label">Área de Interesse</span>
+                                    <div class="comp-bar">
+                                        <div class="comp-fill" style="width: 90%"></div>
+                                    </div>
+                                    <span class="comp-value">90%</span>
+                                </div>
+                                <div class="compatibility-item">
+                                    <span class="comp-label">Habilidades</span>
+                                    <div class="comp-bar">
+                                        <div class="comp-fill" style="width: 95%"></div>
+                                    </div>
+                                    <span class="comp-value">95%</span>
+                                </div>
+                                <div class="compatibility-item">
+                                    <span class="comp-label">Experiência</span>
+                                    <div class="comp-bar">
+                                        <div class="comp-fill" style="width: 100%"></div>
+                                    </div>
+                                    <span class="comp-value">100%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="match-card-actions">
+                            <button class="action-btn reject" onclick="rejectMatch(2)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button class="action-btn info" onclick="viewProfile(2)">
+                                <i class="fas fa-info"></i>
+                            </button>
+                            <button class="action-btn accept" onclick="acceptMatch(2)">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="match-card" data-id="3">
+                        <div class="match-card-header">
+                            <div class="match-percentage">
+                                <span class="percentage">92%</span>
+                                <span class="label">Match</span>
+                            </div>
+                        </div>
+                        
+                        <div class="match-card-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        
+                        <div class="match-card-info">
+                            <h3>Ana Rodrigues</h3>
+                            <p class="match-role">Mestranda em Estatística</p>
+                            <p class="match-institution"><i class="fas fa-university"></i> UFRJ - Rio de Janeiro</p>
+                            
+                            <div class="match-tags">
+                                <span class="tag match-tag">Estatística</span>
+                                <span class="tag match-tag">R</span>
+                                <span class="tag match-tag">Machine Learning</span>
+                            </div>
+                            
+                            <div class="match-stats">
+                                <div class="match-stat">
+                                    <i class="fas fa-book"></i>
+                                    <span>5 publicações</span>
+                                </div>
+                                <div class="match-stat">
+                                    <i class="fas fa-language"></i>
+                                    <span>Inglês Avançado</span>
+                                </div>
+                            </div>
+                            
+                            <div class="compatibility-breakdown">
+                                <h4>Compatibilidade</h4>
+                                <div class="compatibility-item">
+                                    <span class="comp-label">Área de Interesse</span>
+                                    <div class="comp-bar">
+                                        <div class="comp-fill" style="width: 85%"></div>
+                                    </div>
+                                    <span class="comp-value">85%</span>
+                                </div>
+                                <div class="compatibility-item">
+                                    <span class="comp-label">Habilidades</span>
+                                    <div class="comp-bar">
+                                        <div class="comp-fill" style="width: 100%"></div>
+                                    </div>
+                                    <span class="comp-value">100%</span>
+                                </div>
+                                <div class="compatibility-item">
+                                    <span class="comp-label">Disponibilidade</span>
+                                    <div class="comp-bar">
+                                        <div class="comp-fill" style="width: 90%"></div>
+                                    </div>
+                                    <span class="comp-value">90%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="match-card-actions">
+                            <button class="action-btn reject" onclick="rejectMatch(3)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button class="action-btn info" onclick="viewProfile(3)">
+                                <i class="fas fa-info"></i>
+                            </button>
+                            <button class="action-btn accept" onclick="acceptMatch(3)">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accepted Matches List -->
+                <div class="accepted-matches">
+                    <h2><i class="fas fa-check-circle"></i> Matches Aceitos</h2>
+                    <p class="section-description">Pesquisadores que você demonstrou interesse</p>
+                    
+                    <div class="accepted-list" id="acceptedList">
+                        <div class="empty-state">
+                            <i class="fas fa-heart-broken"></i>
+                            <p>Você ainda não aceitou nenhum match.</p>
+                            <small>Deslize para a direita ou clique no coração para aceitar!</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Refine Search Alert -->
+            <div class="refine-alert" id="refineAlert" style="display: none;">
+                <div class="alert-content">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div class="alert-text">
+                        <h4>Muitos candidatos encontrados!</h4>
+                        <p>O sistema encontrou <span id="matchCount">100</span> pessoas compatíveis. Considere refinar sua pesquisa.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openRefineModal()">
+                        <i class="fas fa-filter"></i> Refinar Pesquisa
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content modal-lg">
+            <button class="modal-close" onclick="closeProfileModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="profile-modal-content">
+                <div class="profile-modal-header">
+                    <div class="profile-avatar large">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="modalProfileName">Maria Santos</h2>
+                        <p id="modalProfileRole">Doutoranda em Biologia Molecular</p>
+                        <p id="modalProfileInstitution"><i class="fas fa-university"></i> USP - São Paulo</p>
+                    </div>
+                    <div class="profile-match-score">
+                        <span class="score">98%</span>
+                        <span class="label">Match</span>
+                    </div>
+                </div>
+                
+                <div class="profile-modal-body">
+                    <div class="profile-section">
+                        <h3><i class="fas fa-star"></i> Áreas de Interesse</h3>
+                        <div class="profile-tags">
+                            <span class="tag">Genética</span>
+                            <span class="tag">Bioquímica</span>
+                            <span class="tag">Biologia Molecular</span>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-section">
+                        <h3><i class="fas fa-tools"></i> Habilidades Técnicas</h3>
+                        <div class="profile-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">R</span>
+                            <span class="tag">SPSS</span>
+                            <span class="tag">Análise de Dados</span>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-section">
+                        <h3><i class="fas fa-book"></i> Publicações</h3>
+                        <p><strong>12 publicações</strong> em periódicos indexados</p>
+                        <a href="#" class="link"><i class="fas fa-external-link-alt"></i> Ver Currículo Lattes</a>
+                    </div>
+                    
+                    <div class="profile-section">
+                        <h3><i class="fas fa-language"></i> Idiomas</h3>
+                        <ul class="idiomas-list">
+                            <li><span class="idioma">Português</span> <span class="nivel">Nativo</span></li>
+                            <li><span class="idioma">Inglês</span> <span class="nivel">Fluente</span></li>
+                            <li><span class="idioma">Espanhol</span> <span class="nivel">Intermediário</span></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="profile-modal-actions">
+                    <button class="btn btn-outline" onclick="closeProfileModal()">Fechar</button>
+                    <button class="btn btn-primary" onclick="acceptMatchFromModal()">
+                        <i class="fas fa-heart"></i> Aceitar Match
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Refine Modal -->
+    <div id="refineModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeRefineModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2><i class="fas fa-filter"></i> Refinar Pesquisa</h2>
+            <p>Adicione filtros para encontrar candidatos mais específicos</p>
+            
+            <form class="refine-form">
+                <div class="form-group">
+                    <label>Experiência Mínima (anos)</label>
+                    <input type="number" name="experiencia" min="0" max="50" value="0">
+                </div>
+                
+                <div class="form-group">
+                    <label>Localização</label>
+                    <input type="text" name="localizacao" placeholder="Ex: São Paulo, SP">
+                </div>
+                
+                <div class="form-group">
+                    <label>Disponibilidade</label>
+                    <select name="disponibilidade">
+                        <option value="">Qualquer</option>
+                        <option value="integral">Tempo Integral</option>
+                        <option value="parcial">Tempo Parcial</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Idioma Obrigatório</label>
+                    <select name="idioma">
+                        <option value="">Qualquer</option>
+                        <option value="ingles">Inglês Fluente</option>
+                        <option value="espanhol">Espanhol Fluente</option>
+                    </select>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeRefineModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/matches.js"></script>
+</body>
+</html>

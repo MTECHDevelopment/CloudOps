@@ -1,0 +1,232 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: CloudOps - Plataforma de Conexão e Pesquisa Científica
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: nodejs18.x
+    MemorySize: 256
+    Environment:
+      Variables:
+        USERS_TABLE: !Ref UsersTable
+        PESQUISAS_TABLE: !Ref PesquisasTable
+        MATCHES_TABLE: !Ref MatchesTable
+
+Resources:
+  # API Gateway
+  CloudOpsApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,Authorization'"
+        AllowOrigin: "'*'"
+
+  # DynamoDB Tables
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cloudops-users
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: email-index
+          KeySchema:
+            - AttributeName: email
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  PesquisasTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cloudops-pesquisas
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pesquisaId
+          AttributeType: S
+        - AttributeName: professorId
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pesquisaId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: professor-index
+          KeySchema:
+            - AttributeName: professorId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: status-index
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  MatchesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cloudops-matches
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: matchId
+          AttributeType: S
+        - AttributeName visitorId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: matchId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: user-index
+          KeySchema:
+            - AttributeName: visitorId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  VotacoesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cloudops-votacoes
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: votacaoId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: votacaoId
+          KeyType: HASH
+
+  # Lambda Functions
+  CadastroPerfilFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: cadastroPerfil.handler
+      Events:
+        CreateProfile:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CloudOpsApi
+            Path: /perfil
+            Method: post
+        GetProfile:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CloudOpsApi
+            Path: /perfil/{userId}
+            Method: get
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+
+  CadastroPesquisaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: cadastroPesquisa.handler
+      Events:
+        CreatePesquisa:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CloudOpsApi
+            Path: /pesquisa
+            Method: post
+        GetPesquisas:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CloudOpsApi
+            Path: /pesquisas
+            Method: get
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PesquisasTable
+
+  MatchingEngineFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: matchingEngine.handler
+      Timeout: 60
+      Events:
+        FindMatches:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CloudOpsApi
+            Path: /matches/{pesquisaId}
+            Method: get
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PesquisasTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MatchesTable
+
+  VotacaoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: votacao.handler
+      Events:
+        Vote:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CloudOpsApi
+            Path: /votacao
+            Method: post
+        GetVotacao:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CloudOpsApi
+            Path: /votacao/{pesquisaId}
+            Method: get
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref VotacoesTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PesquisasTable
+
+  NotificacoesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: notificacoes.handler
+      Events:
+        SendNotification:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CloudOpsApi
+            Path: /notificacao
+            Method: post
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt NotificationTopic.TopicName
+
+  # SNS Topic for Notifications
+  NotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: cloudops-notifications
+
+Outputs:
+  ApiUrl:
+    Description: URL da API
+    Value: !Sub "https://${CloudOpsApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
+  UsersTableName:
+    Description: Nome da tabela de usuários
+    Value: !Ref UsersTable
+  PesquisasTableName:
+    Description: Nome da tabela de pesquisas
+    Value: !Ref PesquisasTable

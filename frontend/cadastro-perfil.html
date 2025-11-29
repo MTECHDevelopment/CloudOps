@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Perfil - CloudOps</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cloud"></i>
+                <span>CloudOps</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="cadastro-pesquisa.html">Cadastrar Pesquisa</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="login.html" class="btn btn-outline">Já tenho conta</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="form-page">
+        <div class="form-container">
+            <div class="form-header">
+                <div class="form-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h1>Criar Seu Perfil</h1>
+                <p>Preencha suas informações para encontrar oportunidades de pesquisa compatíveis</p>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <span>Dados Pessoais</span>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <span>Formação</span>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <span>Experiência</span>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <span>Interesses</span>
+                </div>
+            </div>
+
+            <form id="perfilForm" class="main-form multi-step-form">
+                <!-- Step 1: Dados Pessoais -->
+                <div class="form-step active" data-step="1">
+                    <div class="form-section">
+                        <h2><i class="fas fa-user"></i> Dados Pessoais</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nome">Nome Completo *</label>
+                                <input type="text" id="nome" name="nome" required 
+                                    placeholder="Seu nome completo">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">E-mail *</label>
+                                <input type="email" id="email" name="email" required 
+                                    placeholder="seu.email@exemplo.com">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="senha">Senha *</label>
+                                <div class="password-input">
+                                    <input type="password" id="senha" name="senha" required 
+                                        placeholder="Mínimo 8 caracteres">
+                                    <button type="button" class="toggle-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmarSenha">Confirmar Senha *</label>
+                                <div class="password-input">
+                                    <input type="password" id="confirmarSenha" name="confirmarSenha" required 
+                                        placeholder="Repita a senha">
+                                    <button type="button" class="toggle-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tipoUsuario">Eu sou *</label>
+                                <select id="tipoUsuario" name="tipoUsuario" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="aluno">Aluno(a)</option>
+                                    <option value="professor">Professor(a)</option>
+                                    <option value="pesquisador">Pesquisador(a) Independente</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="telefone">Telefone</label>
+                                <input type="tel" id="telefone" name="telefone" 
+                                    placeholder="(11) 99999-9999">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="localizacao">Cidade/Estado *</label>
+                                <input type="text" id="localizacao" name="localizacao" required
+                                    placeholder="Ex: São Paulo, SP">
+                            </div>
+                            <div class="form-group">
+                                <label for="nacionalidade">Nacionalidade</label>
+                                <select id="nacionalidade" name="nacionalidade">
+                                    <option value="brasileiro">Brasileiro(a)</option>
+                                    <option value="estrangeiro">Estrangeiro(a)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Formação Acadêmica -->
+                <div class="form-step" data-step="2">
+                    <div class="form-section">
+                        <h2><i class="fas fa-graduation-cap"></i> Formação Acadêmica</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="escolaridade">Escolaridade Atual *</label>
+                                <select id="escolaridade" name="escolaridade" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="ensino-medio">Ensino Médio</option>
+                                    <option value="superior-incompleto">Superior Incompleto</option>
+                                    <option value="superior-completo">Superior Completo</option>
+                                    <option value="pos-graduacao">Pós-Graduação</option>
+                                    <option value="mestrado">Mestrado</option>
+                                    <option value="doutorado">Doutorado</option>
+                                    <option value="pos-doutorado">Pós-Doutorado</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="curso">Curso/Área de Formação *</label>
+                                <input type="text" id="curso" name="curso" required
+                                    placeholder="Ex: Ciências Biológicas, Física, etc.">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="instituicao">Instituição de Ensino *</label>
+                                <input type="text" id="instituicao" name="instituicao" required
+                                    placeholder="Ex: Universidade de São Paulo (USP)">
+                            </div>
+                            <div class="form-group">
+                                <label for="anoFormacao">Ano de Formação / Previsão</label>
+                                <input type="number" id="anoFormacao" name="anoFormacao" 
+                                    min="1950" max="2035" placeholder="2025">
+                            </div>
+                        </div>
+
+                        <!-- Formações Adicionais -->
+                        <div class="form-group">
+                            <label>Formações Adicionais</label>
+                            <div id="formacoesAdicionais" class="dynamic-list">
+                                <!-- Formações adicionais serão adicionadas aqui -->
+                            </div>
+                            <button type="button" class="btn btn-outline btn-sm" id="addFormacao">
+                                <i class="fas fa-plus"></i> Adicionar Formação
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Experiência e Publicações -->
+                <div class="form-step" data-step="3">
+                    <div class="form-section">
+                        <h2><i class="fas fa-briefcase"></i> Experiência e Publicações</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="anosExperiencia">Anos de Experiência em Pesquisa</label>
+                                <input type="number" id="anosExperiencia" name="anosExperiencia" 
+                                    min="0" max="50" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="numPublicacoes">Número de Publicações</label>
+                                <input type="number" id="numPublicacoes" name="numPublicacoes" 
+                                    min="0" value="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="linkLattes">Link do Currículo Lattes</label>
+                            <input type="url" id="linkLattes" name="linkLattes"
+                                placeholder="http://lattes.cnpq.br/...">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="linkOrcid">ORCID ID</label>
+                            <input type="text" id="linkOrcid" name="linkOrcid"
+                                placeholder="0000-0000-0000-0000">
+                        </div>
+
+                        <!-- Publicações -->
+                        <div class="form-group">
+                            <label>Principais Publicações</label>
+                            <div id="publicacoes" class="dynamic-list">
+                                <!-- Publicações serão adicionadas aqui -->
+                            </div>
+                            <button type="button" class="btn btn-outline btn-sm" id="addPublicacao">
+                                <i class="fas fa-plus"></i> Adicionar Publicação
+                            </button>
+                        </div>
+
+                        <!-- Experiências em Pesquisa -->
+                        <div class="form-group">
+                            <label>Experiências em Pesquisa</label>
+                            <div id="experiencias" class="dynamic-list">
+                                <!-- Experiências serão adicionadas aqui -->
+                            </div>
+                            <button type="button" class="btn btn-outline btn-sm" id="addExperiencia">
+                                <i class="fas fa-plus"></i> Adicionar Experiência
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Áreas de Interesse e Habilidades -->
+                <div class="form-step" data-step="4">
+                    <div class="form-section">
+                        <h2><i class="fas fa-star"></i> Áreas de Interesse</h2>
+                        <p class="section-description">Selecione as áreas de conhecimento que você tem interesse em pesquisar</p>
+                        
+                        <div class="checkbox-grid">
+                            <div class="area-category">
+                                <h4>Ciências Exatas</h4>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="fisica">
+                                    <span class="checkmark"></span>
+                                    Física
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="quimica">
+                                    <span class="checkmark"></span>
+                                    Química
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="matematica">
+                                    <span class="checkmark"></span>
+                                    Matemática
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="estatistica">
+                                    <span class="checkmark"></span>
+                                    Estatística
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="computacao">
+                                    <span class="checkmark"></span>
+                                    Ciência da Computação
+                                </label>
+                            </div>
+                            <div class="area-category">
+                                <h4>Ciências Biológicas</h4>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="biologia">
+                                    <span class="checkmark"></span>
+                                    Biologia
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="biologia-molecular">
+                                    <span class="checkmark"></span>
+                                    Biologia Molecular
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="genetica">
+                                    <span class="checkmark"></span>
+                                    Genética
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="ecologia">
+                                    <span class="checkmark"></span>
+                                    Ecologia
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="bioquimica">
+                                    <span class="checkmark"></span>
+                                    Bioquímica
+                                </label>
+                            </div>
+                            <div class="area-category">
+                                <h4>Ciências da Saúde</h4>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="medicina">
+                                    <span class="checkmark"></span>
+                                    Medicina
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="farmacia">
+                                    <span class="checkmark"></span>
+                                    Farmácia
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="enfermagem">
+                                    <span class="checkmark"></span>
+                                    Enfermagem
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="nutricao">
+                                    <span class="checkmark"></span>
+                                    Nutrição
+                                </label>
+                            </div>
+                            <div class="area-category">
+                                <h4>Ciências Humanas</h4>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="psicologia">
+                                    <span class="checkmark"></span>
+                                    Psicologia
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="sociologia">
+                                    <span class="checkmark"></span>
+                                    Sociologia
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="filosofia">
+                                    <span class="checkmark"></span>
+                                    Filosofia
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="educacao">
+                                    <span class="checkmark"></span>
+                                    Educação
+                                </label>
+                            </div>
+                            <div class="area-category">
+                                <h4>Engenharias</h4>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="eng-civil">
+                                    <span class="checkmark"></span>
+                                    Engenharia Civil
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="eng-eletrica">
+                                    <span class="checkmark"></span>
+                                    Engenharia Elétrica
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="eng-mecanica">
+                                    <span class="checkmark"></span>
+                                    Engenharia Mecânica
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="areasInteresse" value="eng-producao">
+                                    <span class="checkmark"></span>
+                                    Engenharia de Produção
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2><i class="fas fa-tools"></i> Habilidades Técnicas</h2>
+                        
+                        <div class="form-group">
+                            <label for="habilidades">Suas Habilidades</label>
+                            <div class="tags-input">
+                                <div id="habilidadesTags" class="tags-container">
+                                    <!-- Tags serão adicionadas aqui -->
+                                </div>
+                                <input type="text" id="habilidadesInput" 
+                                    placeholder="Digite e pressione Enter (Ex: Python, R, SPSS...)">
+                            </div>
+                            <small>Pressione Enter para adicionar cada habilidade</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sugestões de Habilidades</label>
+                            <div class="skill-suggestions">
+                                <button type="button" class="skill-tag" data-skill="Python">Python</button>
+                                <button type="button" class="skill-tag" data-skill="R">R</button>
+                                <button type="button" class="skill-tag" data-skill="SPSS">SPSS</button>
+                                <button type="button" class="skill-tag" data-skill="Excel">Excel</button>
+                                <button type="button" class="skill-tag" data-skill="Machine Learning">Machine Learning</button>
+                                <button type="button" class="skill-tag" data-skill="Análise de Dados">Análise de Dados</button>
+                                <button type="button" class="skill-tag" data-skill="SQL">SQL</button>
+                                <button type="button" class="skill-tag" data-skill="MATLAB">MATLAB</button>
+                                <button type="button" class="skill-tag" data-skill="LaTeX">LaTeX</button>
+                                <button type="button" class="skill-tag" data-skill="Redação Científica">Redação Científica</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2><i class="fas fa-language"></i> Idiomas</h2>
+                        
+                        <div class="idiomas-grid">
+                            <div class="idioma-item">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="idiomas" value="portugues" checked>
+                                    <span class="checkmark"></span>
+                                    Português
+                                </label>
+                                <select name="nivelPortugues" class="nivel-idioma">
+                                    <option value="nativo">Nativo</option>
+                                    <option value="fluente">Fluente</option>
+                                    <option value="avancado">Avançado</option>
+                                    <option value="intermediario">Intermediário</option>
+                                    <option value="basico">Básico</option>
+                                </select>
+                            </div>
+                            <div class="idioma-item">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="idiomas" value="ingles">
+                                    <span class="checkmark"></span>
+                                    Inglês
+                                </label>
+                                <select name="nivelIngles" class="nivel-idioma" disabled>
+                                    <option value="">Selecione o nível</option>
+                                    <option value="fluente">Fluente</option>
+                                    <option value="avancado">Avançado</option>
+                                    <option value="intermediario">Intermediário</option>
+                                    <option value="basico">Básico</option>
+                                </select>
+                            </div>
+                            <div class="idioma-item">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="idiomas" value="espanhol">
+                                    <span class="checkmark"></span>
+                                    Espanhol
+                                </label>
+                                <select name="nivelEspanhol" class="nivel-idioma" disabled>
+                                    <option value="">Selecione o nível</option>
+                                    <option value="fluente">Fluente</option>
+                                    <option value="avancado">Avançado</option>
+                                    <option value="intermediario">Intermediário</option>
+                                    <option value="basico">Básico</option>
+                                </select>
+                            </div>
+                            <div class="idioma-item">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="idiomas" value="frances">
+                                    <span class="checkmark"></span>
+                                    Francês
+                                </label>
+                                <select name="nivelFrances" class="nivel-idioma" disabled>
+                                    <option value="">Selecione o nível</option>
+                                    <option value="fluente">Fluente</option>
+                                    <option value="avancado">Avançado</option>
+                                    <option value="intermediario">Intermediário</option>
+                                    <option value="basico">Básico</option>
+                                </select>
+                            </div>
+                            <div class="idioma-item">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="idiomas" value="alemao">
+                                    <span class="checkmark"></span>
+                                    Alemão
+                                </label>
+                                <select name="nivelAlemao" class="nivel-idioma" disabled>
+                                    <option value="">Selecione o nível</option>
+                                    <option value="fluente">Fluente</option>
+                                    <option value="avancado">Avançado</option>
+                                    <option value="intermediario">Intermediário</option>
+                                    <option value="basico">Básico</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2><i class="fas fa-clock"></i> Disponibilidade</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="disponibilidade">Disponibilidade para Pesquisa</label>
+                                <select id="disponibilidade" name="disponibilidade">
+                                    <option value="integral">Tempo Integral (40h/semana)</option>
+                                    <option value="parcial">Tempo Parcial (20h/semana)</option>
+                                    <option value="eventual">Eventual (10h/semana)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="modalidade">Modalidade Preferida</label>
+                                <select id="modalidade" name="modalidade">
+                                    <option value="presencial">Presencial</option>
+                                    <option value="remoto">Remoto</option>
+                                    <option value="hibrido">Híbrido</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Termos -->
+                    <div class="form-section">
+                        <label class="checkbox-item terms">
+                            <input type="checkbox" name="termos" required>
+                            <span class="checkmark"></span>
+                            Li e aceito os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <button type="button" class="btn btn-outline prev-step" style="display: none;">
+                        <i class="fas fa-arrow-left"></i> Anterior
+                    </button>
+                    <button type="button" class="btn btn-primary next-step">
+                        Próximo <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-lg submit-btn" style="display: none;">
+                        <i class="fas fa-check"></i> Criar Perfil
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Modal de Sucesso -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon success">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Perfil Criado com Sucesso!</h2>
+            <p>Seu perfil foi criado e você já pode começar a receber oportunidades de pesquisa compatíveis.</p>
+            <div class="modal-info">
+                <i class="fas fa-bell"></i>
+                <span>Ative as notificações para não perder nenhuma oportunidade!</span>
+            </div>
+            <div class="modal-actions">
+                <a href="dashboard.html" class="btn btn-primary">
+                    <i class="fas fa-tachometer-alt"></i> Ir para Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer footer-simple">
+        <div class="container">
+            <p>&copy; 2025 CloudOps - Conexão e Pesquisa. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="js/cadastro-perfil.js"></script>
+</body>
+</html>

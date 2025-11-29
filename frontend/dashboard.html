@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CloudOps</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cloud"></i>
+                <span>CloudOps</span>
+            </a>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li class="active">
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="matches.html">
+                        <i class="fas fa-heart"></i>
+                        <span>Matches</span>
+                        <span class="badge">3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="minhas-pesquisas.html">
+                        <i class="fas fa-flask"></i>
+                        <span>Minhas Pesquisas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="oportunidades.html">
+                        <i class="fas fa-search"></i>
+                        <span>Oportunidades</span>
+                        <span class="badge">12</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="grupos.html">
+                        <i class="fas fa-users"></i>
+                        <span>Meus Grupos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="votacoes.html">
+                        <i class="fas fa-vote-yea"></i>
+                        <span>Votações</span>
+                        <span class="badge warning">1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="notificacoes.html">
+                        <i class="fas fa-bell"></i>
+                        <span>Notificações</span>
+                        <span class="badge">5</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-divider"></div>
+            
+            <ul>
+                <li>
+                    <a href="perfil.html">
+                        <i class="fas fa-user"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="configuracoes.html">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="index.html" class="logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <!-- Top Bar -->
+        <header class="dashboard-header">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar pesquisas, pessoas...">
+            </div>
+            
+            <div class="header-actions">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">5</span>
+                </button>
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name">João Silva</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Bem-vindo de volta, <span class="gradient-text">João</span>!</h1>
+                    <p>Você tem <strong>3 novos matches</strong> e <strong>1 votação pendente</strong> hoje.</p>
+                </div>
+                <div class="welcome-actions">
+                    <a href="cadastro-pesquisa.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nova Pesquisa
+                    </a>
+                </div>
+            </section>
+
+            <!-- Stats Cards -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">12</span>
+                        <span class="stat-label">Matches</span>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> +3 esta semana
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">3</span>
+                        <span class="stat-label">Pesquisas Ativas</span>
+                    </div>
+                    <div class="stat-trend neutral">
+                        <i class="fas fa-minus"></i> Sem alterações
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">2</span>
+                        <span class="stat-label">Grupos Formados</span>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> +1 este mês
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">156</span>
+                        <span class="stat-label">Visualizações do Perfil</span>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> +23% esta semana
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Grid -->
+            <div class="dashboard-grid">
+                <!-- Recent Matches -->
+                <section class="dashboard-card matches-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-heart"></i> Matches Recentes</h2>
+                        <a href="matches.html" class="view-all">Ver todos <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="matches-list">
+                        <div class="match-item">
+                            <div class="match-avatar">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="match-info">
+                                <h4>Maria Santos</h4>
+                                <p>Biologia Molecular • USP</p>
+                                <div class="match-areas">
+                                    <span class="tag">Genética</span>
+                                    <span class="tag">Bioquímica</span>
+                                </div>
+                            </div>
+                            <div class="match-score">
+                                <span class="score">98%</span>
+                                <span class="label">Match</span>
+                            </div>
+                        </div>
+                        <div class="match-item">
+                            <div class="match-avatar">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="match-info">
+                                <h4>Prof. Carlos Oliveira</h4>
+                                <p>Física Quântica • UNICAMP</p>
+                                <div class="match-areas">
+                                    <span class="tag">Física</span>
+                                    <span class="tag">Computação</span>
+                                </div>
+                            </div>
+                            <div class="match-score">
+                                <span class="score">95%</span>
+                                <span class="label">Match</span>
+                            </div>
+                        </div>
+                        <div class="match-item">
+                            <div class="match-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="match-info">
+                                <h4>Ana Rodrigues</h4>
+                                <p>Estatística • UFRJ</p>
+                                <div class="match-areas">
+                                    <span class="tag">Estatística</span>
+                                    <span class="tag">Data Science</span>
+                                </div>
+                            </div>
+                            <div class="match-score">
+                                <span class="score">92%</span>
+                                <span class="label">Match</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Active Researches -->
+                <section class="dashboard-card researches-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-flask"></i> Minhas Pesquisas</h2>
+                        <a href="minhas-pesquisas.html" class="view-all">Ver todas <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="researches-list">
+                        <div class="research-item">
+                            <div class="research-status active"></div>
+                            <div class="research-info">
+                                <h4>Impactos Ambientais na Biodiversidade</h4>
+                                <p>Biologia, Ecologia, Estatística</p>
+                                <div class="research-meta">
+                                    <span><i class="fas fa-users"></i> 3/5 participantes</span>
+                                    <span><i class="fas fa-clock"></i> 2 meses restantes</span>
+                                </div>
+                            </div>
+                            <div class="research-actions">
+                                <button class="btn btn-sm btn-outline">Ver Candidatos</button>
+                            </div>
+                        </div>
+                        <div class="research-item">
+                            <div class="research-status pending"></div>
+                            <div class="research-info">
+                                <h4>Machine Learning em Diagnóstico Médico</h4>
+                                <p>Computação, Medicina, Estatística</p>
+                                <div class="research-meta">
+                                    <span><i class="fas fa-users"></i> 8 candidatos</span>
+                                    <span><i class="fas fa-vote-yea"></i> Em votação</span>
+                                </div>
+                            </div>
+                            <div class="research-actions">
+                                <button class="btn btn-sm btn-primary">Votar</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Opportunities -->
+                <section class="dashboard-card opportunities-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-search"></i> Oportunidades para Você</h2>
+                        <a href="oportunidades.html" class="view-all">Ver todas <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="opportunities-list">
+                        <div class="opportunity-item">
+                            <div class="opportunity-match">95%</div>
+                            <div class="opportunity-info">
+                                <h4>Estudo sobre Mudanças Climáticas</h4>
+                                <p>Prof. Roberto Lima • INPE</p>
+                                <div class="opportunity-tags">
+                                    <span class="tag">Ecologia</span>
+                                    <span class="tag">Estatística</span>
+                                    <span class="tag imprescindivel">Inglês Fluente</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-primary">Candidatar-se</button>
+                        </div>
+                        <div class="opportunity-item">
+                            <div class="opportunity-match">88%</div>
+                            <div class="opportunity-info">
+                                <h4>Análise de Dados Genômicos</h4>
+                                <p>Profa. Lucia Mendes • FIOCRUZ</p>
+                                <div class="opportunity-tags">
+                                    <span class="tag">Bioinformática</span>
+                                    <span class="tag">Python</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-primary">Candidatar-se</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Pending Votes -->
+                <section class="dashboard-card votes-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-vote-yea"></i> Votações Pendentes</h2>
+                    </div>
+                    <div class="vote-item urgent">
+                        <div class="vote-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="vote-info">
+                            <h4>Machine Learning em Diagnóstico Médico</h4>
+                            <p>8 candidatos para 4 vagas</p>
+                            <div class="vote-deadline">
+                                <i class="fas fa-clock"></i>
+                                Termina em 2 dias
+                            </div>
+                        </div>
+                        <a href="votacoes.html" class="btn btn-primary">
+                            <i class="fas fa-vote-yea"></i> Votar Agora
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Notifications -->
+                <section class="dashboard-card notifications-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-bell"></i> Notificações Recentes</h2>
+                        <a href="notificacoes.html" class="view-all">Ver todas <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="notifications-list">
+                        <div class="notification-item unread">
+                            <div class="notification-icon match">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="notification-content">
+                                <p><strong>Novo match!</strong> Maria Santos é 98% compatível com sua pesquisa.</p>
+                                <span class="notification-time">Há 2 horas</span>
+                            </div>
+                        </div>
+                        <div class="notification-item unread">
+                            <div class="notification-icon vote">
+                                <i class="fas fa-vote-yea"></i>
+                            </div>
+                            <div class="notification-content">
+                                <p><strong>Votação iniciada!</strong> A pesquisa "ML em Diagnóstico" atingiu o mínimo de candidatos.</p>
+                                <span class="notification-time">Há 5 horas</span>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-icon info">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="notification-content">
+                                <p>Seu perfil foi visualizado 23 vezes esta semana.</p>
+                                <span class="notification-time">Há 1 dia</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

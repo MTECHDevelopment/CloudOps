@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudOps - Conexão e Pesquisa</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <i class="fas fa-cloud"></i>
+                <span>CloudOps</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Funcionalidades</a></li>
+                <li><a href="#how-it-works">Como Funciona</a></li>
+                <li><a href="#about">Sobre</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="login.html" class="btn btn-outline">Entrar</a>
+                <a href="cadastro-perfil.html" class="btn btn-primary">Cadastrar</a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-rocket"></i>
+                <span>Trilha 1 - Conexão e Pesquisa</span>
+            </div>
+            <h1>O <span class="gradient-text">Tinder da Pesquisa</span> Científica</h1>
+            <p class="hero-description">
+                Conectamos alunos e professores baseado em dados reais: áreas de interesse, 
+                habilidades técnicas e histórico de publicações. Chega de depender do "boca a boca"!
+            </p>
+            <div class="hero-buttons">
+                <a href="cadastro-perfil.html" class="btn btn-primary btn-lg">
+                    <i class="fas fa-user-plus"></i>
+                    Criar Meu Perfil
+                </a>
+                <a href="cadastro-pesquisa.html" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-search"></i>
+                    Cadastrar Pesquisa
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Pesquisadores</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">150+</span>
+                    <span class="stat-label">Pesquisas Ativas</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">89%</span>
+                    <span class="stat-label">Taxa de Match</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-illustration">
+            <div class="floating-cards">
+                <div class="profile-card card-1">
+                    <div class="card-avatar"><i class="fas fa-user-graduate"></i></div>
+                    <div class="card-info">
+                        <span class="card-name">Maria Silva</span>
+                        <span class="card-area">Biologia Molecular</span>
+                    </div>
+                    <div class="card-match">98% Match</div>
+                </div>
+                <div class="profile-card card-2">
+                    <div class="card-avatar"><i class="fas fa-user-tie"></i></div>
+                    <div class="card-info">
+                        <span class="card-name">Prof. João Santos</span>
+                        <span class="card-area">Física Quântica</span>
+                    </div>
+                    <div class="card-match">95% Match</div>
+                </div>
+                <div class="profile-card card-3">
+                    <div class="card-avatar"><i class="fas fa-user"></i></div>
+                    <div class="card-info">
+                        <span class="card-name">Carlos Oliveira</span>
+                        <span class="card-area">Estatística</span>
+                    </div>
+                    <div class="card-match">92% Match</div>
+                </div>
+                <div class="connection-line"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Funcionalidades</span>
+                <h2>Tudo que você precisa para formar seu grupo</h2>
+                <p>Uma plataforma completa para conectar pesquisadores de forma inteligente</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Match Inteligente</h3>
+                    <p>Algoritmo avançado que cruza áreas de interesse, habilidades e histórico de publicações para encontrar o parceiro ideal.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                    <h3>Filtros de Imprescindibilidade</h3>
+                    <p>Defina requisitos obrigatórios vs desejáveis. O sistema só notifica candidatos 100% compatíveis nos critérios essenciais.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Notificações em Tempo Real</h3>
+                    <p>Receba alertas instantâneos quando oportunidades compatíveis surgirem ou quando seu grupo estiver sendo formado.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-vote-yea"></i>
+                    </div>
+                    <h3>Sistema de Votação</h3>
+                    <p>Quando há muitos candidatos, o grupo é formado democraticamente através de votação entre os participantes.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3>Pesquisa Multidisciplinar</h3>
+                    <p>Conecte pesquisadores de diferentes áreas. Estatística + Biologia? Física + Química? O sistema encontra as melhores combinações.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3>Escalável com AWS</h3>
+                    <p>Arquitetura serverless que suporta milhares de conexões simultâneas sem perder performance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Como Funciona</span>
+                <h2>Simples como 1, 2, 3</h2>
+                <p>Em poucos passos você está conectado com os melhores parceiros de pesquisa</p>
+            </div>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Crie seu Perfil</h3>
+                        <p>Cadastre suas áreas de interesse, habilidades técnicas, histórico de publicações e idiomas.</p>
+                    </div>
+                    <div class="step-icon">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Cadastre ou Encontre Pesquisas</h3>
+                        <p>Professores cadastram pesquisas com requisitos. Alunos recebem notificações de oportunidades compatíveis.</p>
+                    </div>
+                    <div class="step-icon">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Match e Formação do Grupo</h3>
+                        <p>O sistema encontra os candidatos ideais, vocês votam, e o grupo é formado automaticamente!</p>
+                    </div>
+                    <div class="step-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Types Section -->
+    <section class="user-types">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Para Quem?</span>
+                <h2>Feito para toda a comunidade acadêmica</h2>
+            </div>
+            <div class="user-types-grid">
+                <div class="user-type-card professor">
+                    <div class="user-type-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>Professores</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Cadastre suas pesquisas</li>
+                        <li><i class="fas fa-check"></i> Defina requisitos específicos</li>
+                        <li><i class="fas fa-check"></i> Receba perfis compatíveis</li>
+                        <li><i class="fas fa-check"></i> Forme grupos multidisciplinares</li>
+                    </ul>
+                    <a href="cadastro-pesquisa.html" class="btn btn-primary">Cadastrar Pesquisa</a>
+                </div>
+                <div class="user-type-card student">
+                    <div class="user-type-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>Alunos</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Encontre iniciação científica</li>
+                        <li><i class="fas fa-check"></i> Receba oportunidades personalizadas</li>
+                        <li><i class="fas fa-check"></i> Conecte-se com professores</li>
+                        <li><i class="fas fa-check"></i> Participe de votações de grupo</li>
+                    </ul>
+                    <a href="cadastro-perfil.html" class="btn btn-primary">Criar Perfil</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Pronto para encontrar seu próximo grupo de pesquisa?</h2>
+                <p>Junte-se a centenas de pesquisadores que já estão conectando-se de forma inteligente.</p>
+                <div class="cta-buttons">
+                    <a href="cadastro-perfil.html" class="btn btn-white btn-lg">
+                        Começar Agora
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <i class="fas fa-cloud"></i>
+                        <span>CloudOps</span>
+                    </div>
+                    <p>Conectando pesquisadores, transformando a ciência.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Plataforma</h4>
+                        <ul>
+                            <li><a href="cadastro-perfil.html">Criar Perfil</a></li>
+                            <li><a href="cadastro-pesquisa.html">Cadastrar Pesquisa</a></li>
+                            <li><a href="dashboard.html">Dashboard</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Recursos</h4>
+                        <ul>
+                            <li><a href="#features">Funcionalidades</a></li>
+                            <li><a href="#how-it-works">Como Funciona</a></li>
+                            <li><a href="#about">Sobre</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Contato</h4>
+                        <ul>
+                            <li><a href="mailto:contato@cloudops.com">contato@cloudops.com</a></li>
+                            <li><a href="#">Suporte</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 CloudOps - Conexão e Pesquisa. Todos os direitos reservados.</p>
+                <p>Desenvolvido com <i class="fas fa-heart"></i> e AWS</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
