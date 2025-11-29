@@ -11,7 +11,7 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm ci
+        - npm install
         - echo "Installing Amplify dependencies..."
     build:
       commands:
@@ -31,5 +31,5 @@ backend:
       commands:
         # Build Amplify backend
         - cd amplify
-        - npm ci
+        - npm install
         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
