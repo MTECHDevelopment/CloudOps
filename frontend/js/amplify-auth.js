@@ -166,7 +166,7 @@ class AmplifyAuth {
             this.currentUser = null;
             
             // Redirecionar para login
-            window.location.href = 'index.html';
+            window.location.href = 'login.html';
             
             return { success: true };
         } catch (error) {
@@ -300,7 +300,7 @@ async function requireAmplifyAuth() {
     await amplifyAuth.init();
     
     if (!amplifyAuth.isAuthenticated()) {
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
         return false;
     }
     return true;

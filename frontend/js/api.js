@@ -96,7 +96,7 @@ class CloudOpsAPI {
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('idToken');
         localStorage.removeItem('userData');
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
     }
 
     // ==================
@@ -263,11 +263,12 @@ const api = new CloudOpsAPI();
 
 // Verificar autenticação em páginas protegidas
 function checkAuth() {
-    const publicPages = ['/', '/index.html', '/login.html', '/cadastro-perfil.html'];
+    const publicPages = ['/', '/index.html', '/login.html', '/cadastro-perfil.html', 'index.html', 'login.html', 'cadastro-perfil.html'];
     const currentPath = window.location.pathname;
+    const currentFile = currentPath.split('/').pop() || 'index.html';
     
-    if (!publicPages.includes(currentPath) && !api.token) {
-        window.location.href = '/login.html';
+    if (!publicPages.includes(currentPath) && !publicPages.includes(currentFile) && !api.token) {
+        window.location.href = 'login.html';
         return false;
     }
     return true;
