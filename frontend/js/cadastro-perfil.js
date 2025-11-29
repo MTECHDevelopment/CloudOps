@@ -18,12 +18,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         prevBtn.style.display = step === 1 ? 'none' : 'flex';
-        nextBtn.style.display = step === 4 ? 'none' : 'flex';
-        submitBtn.style.display = step === 4 ? 'flex' : 'none';
+        nextBtn.style.display = step === 3 ? 'none' : 'flex';
+        submitBtn.style.display = step === 3 ? 'flex' : 'none';
     }
 
     nextBtn.addEventListener('click', () => {
-        if (currentStep < 4) {
+        if (currentStep < 3) {
             currentStep++;
             showStep(currentStep);
         }
