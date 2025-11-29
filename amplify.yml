@@ -13,13 +13,28 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "Preparing frontend..."
+        - echo "✨ Preparando frontend estático..."
+        - echo "📁 Estrutura do frontend - HTML/CSS/JS puro"
     build:
       commands:
-        - echo "Static frontend - no build required"
+        - echo "🎨 Frontend estático - sem necessidade de build"
+        - echo "✅ Todos os arquivos prontos para deploy"
   artifacts:
     baseDirectory: frontend
     files:
       - '**/*'
   cache:
     paths: []
+  customHeaders:
+    - pattern: '**/*'
+      headers:
+        - key: 'Cache-Control'
+          value: 'public, max-age=31536000, immutable'
+    - pattern: '*.html'
+      headers:
+        - key: 'Cache-Control'
+          value: 'public, max-age=0, must-revalidate'
+    - pattern: 'index.html'
+      headers:
+        - key: 'Cache-Control'
+          value: 'no-cache, no-store, must-revalidate'
