@@ -5,7 +5,7 @@ node_modules
 .amplify
 amplify_outputs*
 amplifyconfiguration*
-backend/*
+
 # Environment variables
 .env
 .env.local

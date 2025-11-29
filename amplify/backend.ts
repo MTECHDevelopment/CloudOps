@@ -13,7 +13,7 @@ const rdsConnector = defineFunction({
   entry: './functions/rds-connector/handler.js',
   environment: {
     RDS_ENDPOINT: 'your-rds-endpoint.rds.amazonaws.com',
-    RDS_DATABASE: 'cloudops',
+    RDS_DATABASE: 'tinder-pesquisa',
     RDS_USER: 'postgres',
     RDS_PASSWORD: 'your-password'
   }
