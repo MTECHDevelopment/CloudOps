@@ -47,12 +47,68 @@
         </div>
     </div>
     
-    <script src="js/app.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // Se já estiver autenticado, redirecionar para perfil
+        if (Auth.isAuthenticated()) {
+            window.location.href = 'perfil.html';
+        }
+
+        // Toggle de senha
+        document.querySelector('.toggle-password').addEventListener('click', function() {
+            const input = document.getElementById('senha');
+            const icon = this.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            // Simular login - redirecionar para dashboard
-            window.location.href = 'dashboard.html';
+            
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            const submitBtn = this.querySelector('button[type="submit"]');
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+
+            try {
+                // Em produção, usar a API real
+                // const response = await api.login({ email, password: senha });
+
+                // Mock de login para demonstração
+                const mockResponse = {
+                    accessToken: 'mock-token-' + Date.now(),
+                    refreshToken: 'mock-refresh-token',
+                    userId: 'user-' + Date.now()
+                };
+                
+                const mockUser = {
+                    userId: mockResponse.userId,
+                    email: email,
+                    nome: 'Usuário Demo',
+                    tipoUsuario: 'aluno'
+                };
+
+                // Salvar dados de autenticação
+                Auth.saveAuthData(mockResponse, mockUser);
+
+                // Redirecionar para perfil (ou URL salva)
+                Auth.redirectAfterLogin();
+
+            } catch (error) {
+                console.error('Erro no login:', error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+                alert('Erro ao fazer login. Verifique suas credenciais.');
+            }
         });
     </script>
 </body>

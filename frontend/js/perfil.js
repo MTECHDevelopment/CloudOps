@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await loadProfile();
     await loadStats();
+    await loadMatchesPanel();
     setupEventListeners();
 });
 
@@ -313,4 +314,109 @@ function showNotification(message, type = 'info') {
         notification.classList.remove('show');
         setTimeout(() => notification.remove(), 300);
     }, 3000);
+}
+
+/**
+ * Carrega matches recentes para o painel direito
+ */
+async function loadMatchesPanel() {
+    const container = document.getElementById('matchesPanelList');
+    if (!container) return;
+
+    try {
+        const userId = Auth.getCurrentUserId();
+        
+        // Em produção, usar a API
+        // const response = await api.getMatches(userId);
+        // const matches = response.matches || [];
+
+        // Mock data para demonstração
+        const matches = [
+            { 
+                id: 'pesq-001', 
+                professorId: 'prof-001',
+                professorNome: 'Dr. Carlos Alberto', 
+                titulo: 'IA Aplicada à Medicina', 
+                score: 95 
+            },
+            { 
+                id: 'pesq-002', 
+                professorId: 'prof-002',
+                professorNome: 'Dra. Ana Paula', 
+                titulo: 'Segurança em IoT', 
+                score: 87 
+            },
+            { 
+                id: 'pesq-003', 
+                professorId: 'prof-003',
+                professorNome: 'Dr. Ricardo Santos', 
+                titulo: 'Big Data Analytics', 
+                score: 78 
+            },
+            { 
+                id: 'pesq-004', 
+                professorId: 'prof-004',
+                professorNome: 'Dra. Fernanda Lima', 
+                titulo: 'Robótica Assistiva', 
+                score: 65 
+            }
+        ];
+
+        renderMatchesPanel(matches);
+
+    } catch (error) {
+        console.error('Erro ao carregar matches:', error);
+        container.innerHTML = `
+            <div class="matches-empty">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Erro ao carregar matches</p>
+            </div>
+        `;
+    }
+}
+
+/**
+ * Renderiza os matches no painel direito
+ */
+function renderMatchesPanel(matches) {
+    const container = document.getElementById('matchesPanelList');
+    if (!container) return;
+
+    if (!matches || matches.length === 0) {
+        container.innerHTML = `
+            <div class="matches-empty">
+                <i class="fas fa-heart-broken"></i>
+                <p>Nenhum match ainda.<br>Explore oportunidades!</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = matches.map(match => {
+        const initials = match.professorNome.split(' ')
+            .map(n => n[0])
+            .join('')
+            .substring(0, 2)
+            .toUpperCase();
+        
+        let scoreClass = '';
+        if (match.score >= 80) {
+            scoreClass = '';
+        } else if (match.score >= 60) {
+            scoreClass = 'medium';
+        } else {
+            scoreClass = 'low';
+        }
+        
+        return `
+            <a href="pesquisa.html?id=${match.id}" class="match-card">
+                <div class="match-avatar">${initials}</div>
+                <div class="match-info">
+                    <div class="match-name">${match.professorNome}</div>
+                    <div class="match-research">${match.titulo}</div>
+                </div>
+                <span class="match-score ${scoreClass}">${match.score}%</span>
+            </a>
+        `;
+    }).join('');
 }
