@@ -1,26 +1,35 @@
 version: 1
+
+# Build-time environment variables (public, safe to commit)
+# These are available during the build process
+env:
+  variables:
+    AWS_REGION: us-west-2
+    # Do NOT put secrets here!
+
 frontend:
   phases:
     preBuild:
       commands:
-        - echo "Preparando build do frontend..."
+        - npm ci
+        - echo "Installing Amplify dependencies..."
     build:
       commands:
-        - echo "Build concluído - projeto estático"
+        - npx ampx generate outputs --branch $AWS_BRANCH --app-id $AWS_APP_ID
   artifacts:
     baseDirectory: frontend
     files:
       - '**/*'
+      - amplify_outputs.json
   cache:
-    paths: []
+    paths:
+      - node_modules/**/*
 
 backend:
   phases:
     build:
       commands:
-        - echo "Configurando backend SAM..."
-        - cd backend && sam build
-    postBuild:
-      commands:
-        - echo "Deploy do backend..."
-        - cd backend && sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+        # Build Amplify backend
+        - cd amplify
+        - npm ci
+        - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
