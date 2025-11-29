@@ -1,26 +1,25 @@
 version: 1
+backend:
+  phases:
+    build:
+      commands:
+        - echo "Setting up SAM backend..."
+        - cd backend && sam build
+    postBuild:
+      commands:
+        - echo "Deploying backend..."
+        - sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
 frontend:
   phases:
     preBuild:
       commands:
-        - echo "Preparando build do frontend..."
+        - echo "Preparing frontend..."
     build:
       commands:
-        - echo "Build concluído - projeto estático"
+        - echo "Static frontend - no build required"
   artifacts:
     baseDirectory: frontend
     files:
       - '**/*'
   cache:
     paths: []
-
-backend:
-  phases:
-    build:
-      commands:
-        - echo "Configurando backend SAM..."
-        - cd backend && sam build
-    postBuild:
-      commands:
-        - echo "Deploy do backend..."
-        - cd backend && sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
