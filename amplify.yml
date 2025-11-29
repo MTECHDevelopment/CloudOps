@@ -1,26 +1,40 @@
 version: 1
+backend:
+  phases:
+    build:
+      commands:
+        - echo "Setting up SAM backend..."
+        - cd backend && sam build
+    postBuild:
+      commands:
+        - echo "Deploying backend..."
+        - sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
 frontend:
   phases:
     preBuild:
       commands:
-        - echo "Preparando build do frontend..."
+        - echo "✨ Preparando frontend estático..."
+        - echo "📁 Estrutura do frontend - HTML/CSS/JS puro"
     build:
       commands:
-        - echo "Build concluído - projeto estático"
+        - echo "🎨 Frontend estático - sem necessidade de build"
+        - echo "✅ Todos os arquivos prontos para deploy"
   artifacts:
     baseDirectory: frontend
     files:
       - '**/*'
   cache:
     paths: []
-
-backend:
-  phases:
-    build:
-      commands:
-        - echo "Configurando backend SAM..."
-        - cd backend && sam build
-    postBuild:
-      commands:
-        - echo "Deploy do backend..."
-        - cd backend && sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+  customHeaders:
+    - pattern: '**/*'
+      headers:
+        - key: 'Cache-Control'
+          value: 'public, max-age=31536000, immutable'
+    - pattern: '*.html'
+      headers:
+        - key: 'Cache-Control'
+          value: 'public, max-age=0, must-revalidate'
+    - pattern: 'index.html'
+      headers:
+        - key: 'Cache-Control'
+          value: 'no-cache, no-store, must-revalidate'
