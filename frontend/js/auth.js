@@ -172,6 +172,9 @@ function initAuth() {
 // Auto-inicializar quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', initAuth);
 
+// Função global de logout (para uso em onclick)
+window.logout = logout;
+
 // Exportar para uso global
 window.Auth = {
     isAuthenticated,

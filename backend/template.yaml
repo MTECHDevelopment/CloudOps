@@ -28,7 +28,6 @@ Globals:
         USERS_TABLE: !Ref UsersTable
         PESQUISAS_TABLE: !Ref PesquisasTable
         MATCHES_TABLE: !Ref MatchesTable
-        VOTACOES_TABLE: !Ref VotacoesTable
         NOTIFICATION_TOPIC_ARN: !Ref NotificationTopic
         USER_POOL_ID: !Ref CognitoUserPool
     Tracing: Active
@@ -188,27 +187,6 @@ Resources:
               KeyType: HASH
           Projection:
             ProjectionType: ALL
-        - IndexName: pesquisa-index
-          KeySchema:
-            - AttributeName: pesquisaId
-              KeyType: HASH
-          Projection:
-            ProjectionType: ALL
-
-  VotacoesTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: !Sub cloudops-votacoes-${Environment}
-      BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: votacaoId
-          AttributeType: S
-        - AttributeName: pesquisaId
-          AttributeType: S
-      KeySchema:
-        - AttributeName: votacaoId
-          KeyType: HASH
-      GlobalSecondaryIndexes:
         - IndexName: pesquisa-index
           KeySchema:
             - AttributeName: pesquisaId
@@ -484,41 +462,6 @@ Resources:
             TableName: !Ref PesquisasTable
         - DynamoDBCrudPolicy:
             TableName: !Ref MatchesTable
-        - SNSPublishMessagePolicy:
-            TopicName: !GetAtt NotificationTopic.TopicName
-
-  VotacaoFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub cloudops-votacao-${Environment}
-      CodeUri: lambda/api/
-      Handler: votacao.handler
-      Events:
-        Vote:
-          Type: Api
-          Properties:
-            RestApiId: !Ref CloudOpsApi
-            Path: /votacao
-            Method: post
-        GetVotacao:
-          Type: Api
-          Properties:
-            RestApiId: !Ref CloudOpsApi
-            Path: /votacao/{pesquisaId}
-            Method: get
-        GetMinhasVotacoes:
-          Type: Api
-          Properties:
-            RestApiId: !Ref CloudOpsApi
-            Path: /minhas-votacoes
-            Method: get
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref VotacoesTable
-        - DynamoDBCrudPolicy:
-            TableName: !Ref PesquisasTable
-        - DynamoDBCrudPolicy:
-            TableName: !Ref UsersTable
         - SNSPublishMessagePolicy:
             TopicName: !GetAtt NotificationTopic.TopicName
 

@@ -37,7 +37,6 @@ CloudOps/
 │       │   ├── perfil.js       # CRUD de perfis
 │       │   ├── pesquisa.js     # CRUD de pesquisas
 │       │   ├── matching.js     # Algoritmo de matching
-│       │   ├── votacao.js      # Sistema de votação
 │       │   ├── notificacoes.js # Sistema de notificações
 │       │   └── package.json    # Dependências
 │       └── [legacy handlers]   # Handlers antigos
@@ -57,14 +56,14 @@ CloudOps/
 - Número mínimo e máximo de participantes
 - Campos imprescindíveis vs desejáveis
 
-### 3. Sistema de Votação
-- Quando atinge o número de candidatos, inicia votação
-- Fórmula: (M/2) - 1 votos necessários
-- Os mais votados formam o grupo automaticamente
+### 3. Formação Automática de Grupos
+- Quando atinge o número mínimo de candidatos, grupo é formado
+- Os candidatos mais compatíveis são selecionados automaticamente
+- Professor é notificado sobre o grupo formado
 
 ### 4. Notificações em Tempo Real
 - Alertas de novos matches
-- Avisos de votações pendentes
+- Avisos de candidaturas recebidas
 - Notificação de grupo formado
 
 ## 🛠️ Tecnologias
@@ -131,7 +130,7 @@ const CONFIG = {
 3. Se muitos resultados → solicita **refinamento**
 4. Candidatos recebem **notificação**
 5. Candidatos interessados **confirmam participação**
-6. Ao atingir mínimo, inicia **votação**
+6. Ao atingir mínimo, **grupo é formado** automaticamente
 7. **Grupo formado** é notificado ao professor
 
 ## 📝 API Endpoints
@@ -171,15 +170,9 @@ const CONFIG = {
 | POST | `/matches/accept` | Aceitar match |
 | POST | `/matches/reject` | Rejeitar match |
 
-### Votação
+### Notificações
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| POST | `/votacao/iniciar` | Iniciar votação |
-| GET | `/votacao/{pesquisaId}` | Status da votação |
-| GET | `/votacao/{pid}/candidatos/{uid}` | Candidatos para votar |
-| POST | `/votacao/votar` | Registrar voto |
-| POST | `/votacao/finalizar` | Finalizar votação |
-| GET | `/votacao/{pesquisaId}/resultado` | Resultado |
 | POST | `/notificacao` | Enviar notificação |
 
 ---

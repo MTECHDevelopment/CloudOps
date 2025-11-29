@@ -1596,3 +1596,53 @@ body {
   
   .accepted-matches { margin-top: 32px; }
 }
+
+/* Validation Alert */
+.validation-alert {
+  margin-bottom: 24px;
+}
+.validation-alert .alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 20px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius);
+  color: #991b1b;
+}
+.validation-alert .alert > i {
+  font-size: 24px;
+  color: var(--danger);
+  margin-top: 2px;
+}
+.validation-alert .alert-content {
+  flex: 1;
+  display: block;
+}
+.validation-alert .alert-content strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #991b1b;
+}
+.validation-alert .alert-content ul {
+  margin: 0;
+  padding-left: 20px;
+}
+.validation-alert .alert-content li {
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+.validation-alert .alert-close {
+  background: none;
+  border: none;
+  color: #991b1b;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 16px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.validation-alert .alert-close:hover {
+  opacity: 1;
+}

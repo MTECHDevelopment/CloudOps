@@ -1,20 +1,27 @@
 /**
  * CloudOps - Configuração do Frontend
- * Este arquivo deve ser gerado pelo deploy script ou configurado manualmente
+ * Conecta com a função Lambda: ProjetoIngestao (us-west-1)
  */
 
 const CONFIG = {
     // Ambiente atual
-    environment: 'dev',
+    environment: 'prod',
     
-    // URL da API Gateway (atualizar após deploy)
-    apiUrl: 'http://localhost:3000',
+    // Região AWS
+    region: 'us-west-1',
     
-    // Configuração do Cognito (atualizar após deploy)
+    // Nome da função Lambda
+    lambdaFunction: 'ProjetoIngestao',
+    
+    // URL da API Gateway - INSIRA A URL DO SEU API GATEWAY AQUI
+    // Formato: https://XXXXXXXXXX.execute-api.us-west-1.amazonaws.com/prod
+    apiUrl: '',
+    
+    // Configuração do Cognito (se usar autenticação)
     cognito: {
-        userPoolId: 'us-east-1_XXXXXXXXX',
-        clientId: 'xxxxxxxxxxxxxxxxxxxxxxxxxx',
-        region: 'us-east-1'
+        userPoolId: '',
+        clientId: '',
+        region: 'us-west-1'
     },
     
     // Configurações de UI

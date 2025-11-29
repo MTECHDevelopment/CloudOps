@@ -1,17 +1,15 @@
 /**
  * CloudOps - API Client
- * Cliente para integração com o backend AWS
+ * Cliente para integração com o backend AWS (API Gateway + Lambda)
  */
-
-const API_BASE_URL = window.CONFIG?.apiUrl || 'http://localhost:3000';
 
 class CloudOpsAPI {
     constructor() {
-        this.baseUrl = API_BASE_URL;
-        this.token = localStorage.getItem('accessToken');
+        this.baseUrl = window.CONFIG?.apiUrl || '';
+        this.token = localStorage.getItem('cloudops_access_token');
     }
 
-    // Headers padrão
+    // Headers padrão para requisições
     getHeaders(includeAuth = true) {
         const headers = {
             'Content-Type': 'application/json'
@@ -24,31 +22,57 @@ class CloudOpsAPI {
         return headers;
     }
 
-    // Método genérico para requisições
+    // Atualiza o token (usado após login)
+    setToken(token) {
+        this.token = token;
+    }
+
+    // Método genérico para requisições à API
     async request(endpoint, options = {}) {
+        if (!this.baseUrl) {
+            throw new Error('API URL não configurada. Atualize o config.js com a URL da API Gateway.');
+        }
+
         const url = `${this.baseUrl}${endpoint}`;
         const config = {
+            method: options.method || 'GET',
             headers: this.getHeaders(options.auth !== false),
             ...options
         };
 
+        // Remover headers duplicados se options já tiver
+        if (options.headers) {
+            config.headers = { ...config.headers, ...options.headers };
+        }
+
         try {
+            console.log(`[API] ${config.method} ${endpoint}`);
             const response = await fetch(url, config);
-            const data = await response.json();
+            
+            // Verificar se a resposta é JSON
+            const contentType = response.headers.get('content-type');
+            let data;
+            
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
+            } else {
+                data = await response.text();
+            }
 
             if (!response.ok) {
-                throw new Error(data.error || `HTTP error! status: ${response.status}`);
+                const errorMessage = typeof data === 'object' ? data.error || data.message : data;
+                throw new Error(errorMessage || `HTTP error! status: ${response.status}`);
             }
 
             return data;
         } catch (error) {
-            console.error(`API Error [${endpoint}]:`, error);
+            console.error(`[API Error] ${endpoint}:`, error);
             throw error;
         }
     }
 
     // ==================
-    // AUTH
+    // AUTH - Autenticação
     // ==================
     
     async register(userData) {
@@ -77,10 +101,17 @@ class CloudOpsAPI {
         });
 
         if (response.accessToken) {
-            this.token = response.accessToken;
-            localStorage.setItem('accessToken', response.accessToken);
-            localStorage.setItem('refreshToken', response.refreshToken);
-            localStorage.setItem('idToken', response.idToken);
+            this.setToken(response.accessToken);
+            localStorage.setItem('cloudops_access_token', response.accessToken);
+            if (response.refreshToken) {
+                localStorage.setItem('cloudops_refresh_token', response.refreshToken);
+            }
+            if (response.idToken) {
+                localStorage.setItem('cloudops_id_token', response.idToken);
+            }
+            if (response.userId) {
+                localStorage.setItem('cloudops_user_id', response.userId);
+            }
         }
 
         return response;
@@ -92,15 +123,16 @@ class CloudOpsAPI {
 
     logout() {
         this.token = null;
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('idToken');
-        localStorage.removeItem('userData');
+        localStorage.removeItem('cloudops_access_token');
+        localStorage.removeItem('cloudops_refresh_token');
+        localStorage.removeItem('cloudops_id_token');
+        localStorage.removeItem('cloudops_user_id');
+        localStorage.removeItem('cloudops_user_data');
         window.location.href = 'login.html';
     }
 
     // ==================
-    // PERFIL
+    // PERFIL - Gerenciamento de Perfis
     // ==================
 
     async createPerfil(perfilData) {
@@ -123,11 +155,11 @@ class CloudOpsAPI {
 
     async listPerfis(tipo) {
         const query = tipo ? `?tipo=${tipo}` : '';
-        return await this.request(`/perfil${query}`);
+        return await this.request(`/perfis${query}`);
     }
 
     // ==================
-    // PESQUISA
+    // PESQUISA - Gerenciamento de Pesquisas
     // ==================
 
     async createPesquisa(pesquisaData) {
@@ -144,7 +176,7 @@ class CloudOpsAPI {
     async listPesquisas(filters = {}) {
         const params = new URLSearchParams(filters).toString();
         const query = params ? `?${params}` : '';
-        return await this.request(`/pesquisa${query}`);
+        return await this.request(`/pesquisas${query}`);
     }
 
     async updatePesquisa(pesquisaId, pesquisaData) {
@@ -172,7 +204,7 @@ class CloudOpsAPI {
     }
 
     // ==================
-    // MATCHING
+    // MATCHING - Sistema de Match
     // ==================
 
     async findMatchesForPesquisa(pesquisaId) {
@@ -198,40 +230,18 @@ class CloudOpsAPI {
     }
 
     // ==================
-    // VOTAÇÃO
+    // NOTIFICAÇÕES
     // ==================
 
-    async iniciarVotacao(pesquisaId, candidatos) {
-        return await this.request('/votacao/iniciar', {
+    async getNotificacoes(userId) {
+        return await this.request(`/notificacoes?userId=${userId}`);
+    }
+
+    async sendNotificacao(notificacaoData) {
+        return await this.request('/notificacao', {
             method: 'POST',
-            body: JSON.stringify({ pesquisaId, candidatos })
+            body: JSON.stringify(notificacaoData)
         });
-    }
-
-    async getVotacaoStatus(pesquisaId) {
-        return await this.request(`/votacao/${pesquisaId}`);
-    }
-
-    async getCandidatosParaVotar(pesquisaId, userId) {
-        return await this.request(`/votacao/${pesquisaId}/candidatos/${userId}`);
-    }
-
-    async votar(votoData) {
-        return await this.request('/votacao/votar', {
-            method: 'POST',
-            body: JSON.stringify(votoData)
-        });
-    }
-
-    async finalizarVotacao(pesquisaId) {
-        return await this.request('/votacao/finalizar', {
-            method: 'POST',
-            body: JSON.stringify({ pesquisaId })
-        });
-    }
-
-    async getResultadoVotacao(pesquisaId) {
-        return await this.request(`/votacao/${pesquisaId}/resultado`);
     }
 
     // ==================
@@ -258,13 +268,10 @@ class CloudOpsAPI {
     }
 }
 
-// Instância global
+// Instância global da API
 const api = new CloudOpsAPI();
 
-// A verificação de autenticação é feita pelo módulo auth.js
-// Não duplicar aqui para evitar conflitos de redirecionamento
-
-// Export para uso em módulos
+// Export para uso em módulos ES6
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { CloudOpsAPI, api };
 }

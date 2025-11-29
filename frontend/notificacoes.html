@@ -117,9 +117,6 @@
                 <button class="filter-btn" data-filter="vaga">
                     <i class="fas fa-user-plus"></i> Vagas
                 </button>
-                <button class="filter-btn" data-filter="votacao">
-                    <i class="fas fa-vote-yea"></i> Votações
-                </button>
             </div>
 
             <!-- Loading -->
@@ -202,15 +199,6 @@
                 },
                 {
                     id: '3',
-                    type: 'votacao',
-                    title: 'Votação iniciada!',
-                    message: 'A votação para "Análise de Dados Genômicos" começou. Você tem 3 dias para votar.',
-                    pesquisaId: 'p789',
-                    read: false,
-                    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString() // 5 horas atrás
-                },
-                {
-                    id: '4',
                     type: 'candidatura',
                     title: 'Candidatura recebida',
                     message: 'Maria Santos se candidatou para sua pesquisa "Impactos Ambientais".',
@@ -220,7 +208,7 @@
                     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString() // 1 dia atrás
                 },
                 {
-                    id: '5',
+                    id: '4',
                     type: 'grupo',
                     title: 'Grupo formado!',
                     message: 'Parabéns! O grupo para "Robótica Educacional" foi formado com sucesso.',
@@ -289,7 +277,6 @@
             const icons = {
                 'match': '<i class="fas fa-heart"></i>',
                 'vaga': '<i class="fas fa-user-plus"></i>',
-                'votacao': '<i class="fas fa-vote-yea"></i>',
                 'candidatura': '<i class="fas fa-paper-plane"></i>',
                 'grupo': '<i class="fas fa-users"></i>',
                 'sistema': '<i class="fas fa-info-circle"></i>'
@@ -459,7 +446,6 @@
 
         .notif-icon.match { background: var(--danger-light); color: var(--danger-color); }
         .notif-icon.vaga { background: var(--success-light); color: var(--success-color); }
-        .notif-icon.votacao { background: var(--warning-light); color: var(--warning-color); }
         .notif-icon.candidatura { background: var(--primary-light); color: var(--primary-color); }
         .notif-icon.grupo { background: var(--info-light); color: var(--info-color); }
         .notif-icon.sistema { background: var(--bg-secondary); color: var(--text-secondary); }

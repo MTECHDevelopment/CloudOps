@@ -156,9 +156,6 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('candidatosModal')">Fechar</button>
-                <button class="btn btn-primary" id="btnIniciarVotacao" onclick="iniciarVotacao()">
-                    <i class="fas fa-vote-yea"></i> Iniciar Votação
-                </button>
             </div>
         </div>
     </div>
@@ -241,11 +238,6 @@
                         <button class="btn btn-sm btn-outline" onclick="editarPesquisa('${p.pesquisaId}')">
                             <i class="fas fa-edit"></i> Editar
                         </button>
-                        ${p.status === 'ativa' && p.candidatos?.length >= p.minParticipantes ? `
-                            <button class="btn btn-sm btn-primary" onclick="abrirVotacao('${p.pesquisaId}')">
-                                <i class="fas fa-vote-yea"></i> Votação
-                            </button>
-                        ` : ''}
                     </div>
                 </div>
             `).join('');
@@ -301,7 +293,6 @@
                 
                 if (candidatos.length === 0) {
                     container.innerHTML = '<p class="empty-message">Nenhum candidato ainda.</p>';
-                    document.getElementById('btnIniciarVotacao').style.display = 'none';
                 } else {
                     container.innerHTML = `
                         <div class="candidatos-list">
@@ -328,12 +319,6 @@
                         </div>
                     `;
                     
-                    const pesquisa = minhasPesquisas.find(p => p.pesquisaId === pesquisaId);
-                    if (pesquisa && candidatos.length >= pesquisa.minParticipantes) {
-                        document.getElementById('btnIniciarVotacao').style.display = 'block';
-                    } else {
-                        document.getElementById('btnIniciarVotacao').style.display = 'none';
-                    }
                 }
 
                 openModal('candidatosModal');
@@ -342,29 +327,6 @@
                 console.error('Erro ao carregar candidatos:', error);
                 showNotification('Erro ao carregar candidatos', 'error');
             }
-        }
-
-        async function iniciarVotacao() {
-            if (!currentPesquisaId) return;
-
-            try {
-                const response = await api.getCandidatos(currentPesquisaId);
-                const candidatosIds = (response.candidatos || []).map(c => c.userId);
-
-                await api.iniciarVotacao(currentPesquisaId, candidatosIds);
-
-                showNotification('Votação iniciada com sucesso!', 'success');
-                closeModal('candidatosModal');
-                await loadData();
-
-            } catch (error) {
-                console.error('Erro ao iniciar votação:', error);
-                showNotification('Erro ao iniciar votação', 'error');
-            }
-        }
-
-        function abrirVotacao(pesquisaId) {
-            window.location.href = `votacao.html?id=${pesquisaId}`;
         }
 
         function editarPesquisa(pesquisaId) {
@@ -399,7 +361,6 @@
         function formatStatus(status) {
             const statuses = {
                 'ativa': 'Ativa',
-                'votacao-aberta': 'Em Votação',
                 'grupo-formado': 'Grupo Formado',
                 'finalizada': 'Finalizada',
                 'inativa': 'Inativa'
@@ -526,7 +487,6 @@
         }
 
         .pesquisa-status.ativa { background: var(--success-light); color: var(--success-color); }
-        .pesquisa-status.votacao-aberta { background: var(--warning-light); color: var(--warning-color); }
         .pesquisa-status.grupo-formado { background: var(--primary-light); color: var(--primary-color); }
         .pesquisa-status.aceito { background: var(--success-light); color: var(--success-color); }
 

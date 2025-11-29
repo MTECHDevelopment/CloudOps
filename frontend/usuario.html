@@ -56,7 +56,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="logout()" class="logout">
+                    <a href="#" onclick="Auth.logout()" class="logout">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>Sair</span>
                     </a>
@@ -356,7 +356,7 @@
         }
 
         function formatStatus(status) {
-            const statuses = { 'ativa': 'Ativa', 'votacao-aberta': 'Em Votação', 'grupo-formado': 'Grupo Formado', 'finalizada': 'Finalizada' };
+            const statuses = { 'ativa': 'Ativa', 'grupo-formado': 'Grupo Formado', 'finalizada': 'Finalizada' };
             return statuses[status] || status || '-';
         }
 

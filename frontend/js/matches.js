@@ -56,7 +56,7 @@ function updateStack() {
             <div class="empty-state">
                 <i class="fas fa-check-circle" style="color: var(--success);"></i>
                 <p>Você viu todos os matches disponíveis!</p>
-                <a href="dashboard.html" class="btn btn-primary">Voltar ao Dashboard</a>
+                <a href="perfil.html" class="btn btn-primary">Voltar ao Perfil</a>
             </div>
         `;
     }

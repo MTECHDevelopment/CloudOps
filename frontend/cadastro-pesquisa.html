@@ -12,16 +12,16 @@
     <!-- Header -->
     <header class="header">
         <nav class="nav-container">
-            <a href="index.html" class="logo">
+            <a href="perfil.html" class="logo">
                 <i class="fas fa-cloud"></i>
                 <span>CloudOps</span>
             </a>
             <ul class="nav-links">
-                <li><a href="index.html">Início</a></li>
-                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="perfil.html">Meu Perfil</a></li>
                 <li><a href="matches.html">Matches</a></li>
+                <li><a href="oportunidades.html">Oportunidades</a></li>
             </ul>
-            <div class="nav-buttons">
+            <div class="nav-buttons" id="navButtons">
                 <a href="login.html" class="btn btn-outline">Entrar</a>
             </div>
         </nav>
@@ -298,8 +298,8 @@
                     </div>
                     <p class="form-info">
                         <i class="fas fa-info-circle"></i>
-                        Quando o número de candidatos atingir entre o mínimo e o dobro do máximo, 
-                        o sistema iniciará o processo de votação para formar o grupo.
+                        Quando o número de candidatos atingir o mínimo necessário, 
+                        o sistema formará o grupo automaticamente com os candidatos mais compatíveis.
                     </p>
                 </div>
 
@@ -434,7 +434,7 @@
                 <span>Você receberá notificações quando candidatos compatíveis forem encontrados.</span>
             </div>
             <div class="modal-actions">
-                <a href="dashboard.html" class="btn btn-primary">
+                <a href="minhas-pesquisas.html" class="btn btn-primary">
                     <i class="fas fa-tachometer-alt"></i> Ir para Dashboard
                 </a>
                 <button class="btn btn-outline" onclick="closeModal()">Cadastrar Outra</button>
@@ -449,6 +449,8 @@
         </div>
     </footer>
 
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
     <script src="js/app.js"></script>
     <script src="js/cadastro-pesquisa.js"></script>
 </body>
