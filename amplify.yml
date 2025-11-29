@@ -30,6 +30,10 @@ backend:
     build:
       commands:
         # Build Amplify backend
+        - pwd
+        - ls -la
         - cd amplify
+        - pwd
+        - ls -la
         - npm install
         - npx @aws-amplify/backend-cli pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
