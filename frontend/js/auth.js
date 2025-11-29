@@ -13,11 +13,23 @@ const AUTH_KEYS = {
 
 // Páginas públicas que não requerem autenticação
 const PUBLIC_PAGES = [
-    '/',
-    '/index.html',
-    '/login.html',
-    '/cadastro-perfil.html'
+    'index.html',
+    'login.html',
+    'cadastro-perfil.html'
 ];
+
+/**
+ * Verifica se a página atual é pública
+ */
+function isPublicPage() {
+    const currentPath = window.location.pathname;
+    const currentFile = currentPath.split('/').pop() || 'index.html';
+    
+    // Verificar se é a raiz ou uma página pública
+    return currentPath === '/' || 
+           currentPath.endsWith('/') ||
+           PUBLIC_PAGES.includes(currentFile);
+}
 
 /**
  * Verifica se o usuário está autenticado
@@ -92,12 +104,12 @@ function logout() {
  * Redireciona para login se não autenticado
  */
 function requireAuth() {
-    const currentPath = window.location.pathname;
-    const isPublic = PUBLIC_PAGES.some(page => 
-        currentPath === page || currentPath.endsWith(page)
-    );
+    // Se for página pública, não precisa verificar
+    if (isPublicPage()) {
+        return true;
+    }
 
-    if (!isPublic && !isAuthenticated()) {
+    if (!isAuthenticated()) {
         // Salvar URL de destino para redirecionar após login
         sessionStorage.setItem('redirectAfterLogin', window.location.href);
         window.location.href = 'login.html';

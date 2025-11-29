@@ -261,23 +261,8 @@ class CloudOpsAPI {
 // Instância global
 const api = new CloudOpsAPI();
 
-// Verificar autenticação em páginas protegidas
-function checkAuth() {
-    const publicPages = ['/', '/index.html', '/login.html', '/cadastro-perfil.html', 'index.html', 'login.html', 'cadastro-perfil.html'];
-    const currentPath = window.location.pathname;
-    const currentFile = currentPath.split('/').pop() || 'index.html';
-    
-    if (!publicPages.includes(currentPath) && !publicPages.includes(currentFile) && !api.token) {
-        window.location.href = 'login.html';
-        return false;
-    }
-    return true;
-}
-
-// Auto-check auth
-if (typeof document !== 'undefined') {
-    document.addEventListener('DOMContentLoaded', checkAuth);
-}
+// A verificação de autenticação é feita pelo módulo auth.js
+// Não duplicar aqui para evitar conflitos de redirecionamento
 
 // Export para uso em módulos
 if (typeof module !== 'undefined' && module.exports) {
