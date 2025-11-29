@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa - CloudOps</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cloud"></i>
+                <span>CloudOps</span>
+            </a>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="matches.html">
+                        <i class="fas fa-heart"></i>
+                        <span>Matches</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="minhas-pesquisas.html">
+                        <i class="fas fa-flask"></i>
+                        <span>Minhas Pesquisas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="oportunidades.html">
+                        <i class="fas fa-search"></i>
+                        <span>Oportunidades</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="notificacoes.html">
+                        <i class="fas fa-bell"></i>
+                        <span>Notificações</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-divider"></div>
+            
+            <ul>
+                <li>
+                    <a href="perfil.html">
+                        <i class="fas fa-user"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="Auth.logout()" class="logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <!-- Top Bar -->
+        <header class="dashboard-header">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="header-actions">
+                <button class="notification-btn" onclick="window.location.href='notificacoes.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">0</span>
+                </button>
+                <div class="user-menu" onclick="window.location.href='perfil.html'">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name" id="headerUserName">-</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="dashboard-content">
+            <!-- Loading State -->
+            <div class="loading-state" id="loadingState">
+                <div class="spinner"></div>
+                <p>Carregando pesquisa...</p>
+            </div>
+
+            <!-- Error State -->
+            <div class="error-state hidden" id="errorState">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Pesquisa não encontrada</h2>
+                <p>A pesquisa que você está procurando não existe ou foi removida.</p>
+                <a href="oportunidades.html" class="btn btn-primary">Ver Oportunidades</a>
+            </div>
+
+            <!-- Pesquisa Content -->
+            <div class="pesquisa-content hidden" id="pesquisaContent">
+                <!-- Header -->
+                <section class="pesquisa-header-section">
+                    <div class="pesquisa-status-badge" id="pesquisaStatus">Ativa</div>
+                    <h1 id="pesquisaTitulo">-</h1>
+                    <div class="pesquisa-meta-header">
+                        <span><i class="fas fa-calendar"></i> Publicada em <span id="pesquisaData">-</span></span>
+                        <span><i class="fas fa-users"></i> <span id="pesquisaVagas">-</span> vagas</span>
+                    </div>
+                </section>
+
+                <!-- Professor Info -->
+                <section class="dashboard-card professor-card">
+                    <div class="professor-profile">
+                        <div class="professor-avatar-lg">
+                            <img id="professorAvatar" src="" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <i class="fas fa-user-tie" style="display:none;"></i>
+                        </div>
+                        <div class="professor-details">
+                            <span class="professor-label">Publicado por</span>
+                            <h3 id="professorNome">-</h3>
+                            <p id="professorInstituicao">-</p>
+                            <a href="#" id="professorLink" class="btn btn-sm btn-outline">
+                                <i class="fas fa-external-link-alt"></i> Ver Perfil
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Descrição -->
+                <section class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-info-circle"></i> Descrição</h2>
+                    </div>
+                    <div class="card-body">
+                        <p id="pesquisaDescricao">-</p>
+                    </div>
+                </section>
+
+                <!-- Requisitos Grid -->
+                <div class="requisitos-grid">
+                    <!-- Áreas -->
+                    <section class="dashboard-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-lightbulb"></i> Áreas de Conhecimento</h2>
+                        </div>
+                        <div class="tags-container" id="pesquisaAreas">-</div>
+                    </section>
+
+                    <!-- Habilidades -->
+                    <section class="dashboard-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-code"></i> Habilidades Técnicas</h2>
+                        </div>
+                        <div class="tags-container" id="pesquisaHabilidades">-</div>
+                    </section>
+
+                    <!-- Idiomas -->
+                    <section class="dashboard-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-globe"></i> Idiomas</h2>
+                        </div>
+                        <div class="tags-container" id="pesquisaIdiomas">-</div>
+                    </section>
+
+                    <!-- Requisitos Mínimos -->
+                    <section class="dashboard-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-check-circle"></i> Requisitos</h2>
+                        </div>
+                        <div class="requisitos-list">
+                            <div class="requisito-item">
+                                <span class="requisito-label">Escolaridade Mínima</span>
+                                <span class="requisito-value" id="pesquisaEscolaridade">-</span>
+                            </div>
+                            <div class="requisito-item">
+                                <span class="requisito-label">Publicações Mínimas</span>
+                                <span class="requisito-value" id="pesquisaPublicacoes">-</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Imprescindíveis -->
+                <section class="dashboard-card" id="imprescindivelSection">
+                    <div class="card-header">
+                        <h2><i class="fas fa-exclamation-triangle"></i> Requisitos Imprescindíveis</h2>
+                    </div>
+                    <div class="imprescindivel-list" id="pesquisaImprescindivel">
+                        <p class="empty-message">Nenhum requisito imprescindível.</p>
+                    </div>
+                </section>
+
+                <!-- Ações -->
+                <section class="pesquisa-actions" id="pesquisaActions">
+                    <!-- Ações dinâmicas -->
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const pesquisaId = urlParams.get('id');
+        let pesquisaData = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!pesquisaId) {
+                showError();
+                return;
+            }
+
+            await loadPesquisa();
+            setupSidebarToggle();
+            Auth.updateHeaderUserInfo();
+        });
+
+        async function loadPesquisa() {
+            try {
+                const response = await api.getPesquisa(pesquisaId);
+                
+                if (!response || response.error) {
+                    showError();
+                    return;
+                }
+
+                pesquisaData = response;
+                renderPesquisa(response);
+                
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('pesquisaContent').classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Erro ao carregar pesquisa:', error);
+                showError();
+            }
+        }
+
+        function renderPesquisa(p) {
+            // Header
+            document.getElementById('pesquisaStatus').textContent = formatStatus(p.status);
+            document.getElementById('pesquisaStatus').className = `pesquisa-status-badge ${p.status}`;
+            document.getElementById('pesquisaTitulo').textContent = p.titulo;
+            document.getElementById('pesquisaData').textContent = formatDate(p.createdAt);
+            document.getElementById('pesquisaVagas').textContent = `${p.minParticipantes}-${p.maxParticipantes}`;
+
+            // Professor
+            document.getElementById('professorNome').textContent = p.professorNome || 'Professor';
+            document.getElementById('professorInstituicao').textContent = p.instituicao || '-';
+            document.getElementById('professorLink').href = `usuario.html?id=${p.professorId}`;
+            
+            if (p.professorFoto) {
+                document.getElementById('professorAvatar').src = p.professorFoto;
+            }
+
+            // Descrição
+            document.getElementById('pesquisaDescricao').textContent = p.descricao || 'Sem descrição disponível.';
+
+            // Áreas
+            renderTags('pesquisaAreas', p.areas);
+
+            // Habilidades
+            renderTags('pesquisaHabilidades', p.habilidadesTecnicas);
+
+            // Idiomas
+            renderTags('pesquisaIdiomas', p.idiomas);
+
+            // Requisitos
+            document.getElementById('pesquisaEscolaridade').textContent = formatEscolaridade(p.escolaridadeMinima);
+            document.getElementById('pesquisaPublicacoes').textContent = p.historicoPublicacao || '0';
+
+            // Imprescindíveis
+            renderImprescindiveis(p.imprescindivel);
+
+            // Ações
+            renderActions(p);
+        }
+
+        function renderTags(containerId, items) {
+            const container = document.getElementById(containerId);
+            if (!items || items.length === 0) {
+                container.innerHTML = '<span class="empty-message">Não especificado</span>';
+                return;
+            }
+            container.innerHTML = items.map(item => `<span class="tag">${item}</span>`).join('');
+        }
+
+        function renderImprescindiveis(items) {
+            const container = document.getElementById('pesquisaImprescindivel');
+            const section = document.getElementById('imprescindivelSection');
+
+            if (!items || items.length === 0) {
+                section.classList.add('hidden');
+                return;
+            }
+
+            const labels = {
+                'areas': 'Áreas de Conhecimento',
+                'escolaridade': 'Escolaridade Mínima',
+                'publicacoes': 'Histórico de Publicações',
+                'idiomas': 'Idiomas',
+                'habilidades': 'Habilidades Técnicas'
+            };
+
+            container.innerHTML = items.map(item => `
+                <div class="imprescindivel-item">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>${labels[item] || item}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderActions(p) {
+            const container = document.getElementById('pesquisaActions');
+            const currentUserId = Auth.getCurrentUserId();
+            const isOwner = currentUserId === p.professorId;
+
+            if (isOwner) {
+                container.innerHTML = `
+                    <a href="cadastro-pesquisa.html?id=${p.pesquisaId}" class="btn btn-outline">
+                        <i class="fas fa-edit"></i> Editar Pesquisa
+                    </a>
+                    <button class="btn btn-primary" onclick="verCandidatos()">
+                        <i class="fas fa-users"></i> Ver Candidatos
+                    </button>
+                `;
+            } else if (p.status === 'ativa') {
+                container.innerHTML = `
+                    <button class="btn btn-primary btn-lg" onclick="candidatar()">
+                        <i class="fas fa-paper-plane"></i> Candidatar-se
+                    </button>
+                `;
+            } else {
+                container.innerHTML = `
+                    <p class="info-message"><i class="fas fa-info-circle"></i> Esta pesquisa não está aceitando candidaturas no momento.</p>
+                `;
+            }
+        }
+
+        async function candidatar() {
+            try {
+                const userId = Auth.getCurrentUserId();
+                await api.candidatarPesquisa(pesquisaId, userId);
+                
+                showNotification('Candidatura enviada com sucesso!', 'success');
+                
+                // Atualizar ações
+                document.getElementById('pesquisaActions').innerHTML = `
+                    <p class="success-message"><i class="fas fa-check-circle"></i> Você já é candidato desta pesquisa!</p>
+                `;
+
+            } catch (error) {
+                console.error('Erro ao candidatar:', error);
+                showNotification(error.message || 'Erro ao enviar candidatura', 'error');
+            }
+        }
+
+        function verCandidatos() {
+            window.location.href = `minhas-pesquisas.html`;
+        }
+
+        function showError() {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('errorState').classList.remove('hidden');
+        }
+
+        function formatStatus(status) {
+            const statuses = {
+                'ativa': 'Ativa',
+                'votacao-aberta': 'Em Votação',
+                'grupo-formado': 'Grupo Formado',
+                'finalizada': 'Finalizada'
+            };
+            return statuses[status] || status || '-';
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            return new Date(dateStr).toLocaleDateString('pt-BR');
+        }
+
+        function formatEscolaridade(esc) {
+            const niveis = {
+                'ensino-medio': 'Ensino Médio',
+                'superior-incompleto': 'Superior Incompleto',
+                'superior-completo': 'Superior Completo',
+                'pos-graduacao': 'Pós-Graduação',
+                'mestrado': 'Mestrado',
+                'doutorado': 'Doutorado',
+                'pos-doutorado': 'Pós-Doutorado'
+            };
+            return niveis[esc] || esc || 'Não especificado';
+        }
+
+        function setupSidebarToggle() {
+            const toggle = document.querySelector('.sidebar-toggle');
+            if (toggle) {
+                toggle.addEventListener('click', () => {
+                    document.querySelector('.sidebar').classList.toggle('collapsed');
+                });
+            }
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i><span>${message}</span>`;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.classList.add('show'), 10);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+
+    <style>
+        .pesquisa-header-section {
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pesquisa-status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .pesquisa-status-badge.ativa { background: var(--success-light); color: var(--success-color); }
+        .pesquisa-status-badge.votacao-aberta { background: var(--warning-light); color: var(--warning-color); }
+        .pesquisa-status-badge.grupo-formado { background: var(--primary-light); color: var(--primary-color); }
+
+        .pesquisa-header-section h1 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .pesquisa-meta-header {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .professor-card {
+            margin-bottom: 1.5rem;
+        }
+
+        .professor-profile {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .professor-avatar-lg {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            overflow: hidden;
+        }
+
+        .professor-avatar-lg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .professor-details {
+            flex: 1;
+        }
+
+        .professor-label {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .professor-details h3 {
+            font-size: 1.25rem;
+            margin: 0.25rem 0;
+        }
+
+        .professor-details p {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .requisitos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .requisitos-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .requisito-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .requisito-label {
+            color: var(--text-secondary);
+        }
+
+        .requisito-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .imprescindivel-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .imprescindivel-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--danger-light);
+            color: var(--danger-color);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .pesquisa-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+
+        .success-message, .info-message {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .success-message {
+            background: var(--success-light);
+            color: var(--success-color);
+        }
+
+        .info-message {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+        }
+
+        .loading-state, .error-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4rem;
+            text-align: center;
+        }
+
+        .error-state i {
+            font-size: 4rem;
+            color: var(--danger-color);
+            margin-bottom: 1rem;
+        }
+
+        .hidden { display: none !important; }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .requisitos-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .professor-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</body>
+</html>

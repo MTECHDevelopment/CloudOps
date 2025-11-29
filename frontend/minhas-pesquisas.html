@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Pesquisas - CloudOps</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cloud"></i>
+                <span>CloudOps</span>
+            </a>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="matches.html">
+                        <i class="fas fa-heart"></i>
+                        <span>Matches</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="minhas-pesquisas.html">
+                        <i class="fas fa-flask"></i>
+                        <span>Minhas Pesquisas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="oportunidades.html">
+                        <i class="fas fa-search"></i>
+                        <span>Oportunidades</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="notificacoes.html">
+                        <i class="fas fa-bell"></i>
+                        <span>Notificações</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-divider"></div>
+            
+            <ul>
+                <li>
+                    <a href="perfil.html">
+                        <i class="fas fa-user"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="Auth.logout()" class="logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <!-- Top Bar -->
+        <header class="dashboard-header">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="header-actions">
+                <button class="notification-btn" onclick="window.location.href='notificacoes.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">0</span>
+                </button>
+                <div class="user-menu" onclick="window.location.href='perfil.html'">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name" id="headerUserName">-</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="dashboard-content">
+            <!-- Header Section -->
+            <section class="page-header">
+                <div class="page-title">
+                    <h1><i class="fas fa-flask"></i> Minhas Pesquisas</h1>
+                    <p>Gerencie suas pesquisas e candidaturas</p>
+                </div>
+                <div class="page-actions">
+                    <a href="cadastro-pesquisa.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nova Pesquisa
+                    </a>
+                </div>
+            </section>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <button class="tab-btn active" data-tab="minhas">
+                    <i class="fas fa-flask"></i> Minhas Pesquisas
+                    <span class="tab-count" id="minhasCount">0</span>
+                </button>
+                <button class="tab-btn" data-tab="candidaturas">
+                    <i class="fas fa-paper-plane"></i> Minhas Candidaturas
+                    <span class="tab-count" id="candidaturasCount">0</span>
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-state" id="loadingState">
+                <div class="spinner"></div>
+                <p>Carregando...</p>
+            </div>
+
+            <!-- Tab: Minhas Pesquisas -->
+            <div class="tab-content active" id="tab-minhas">
+                <div class="empty-state hidden" id="emptyMinhas">
+                    <i class="fas fa-flask"></i>
+                    <h2>Nenhuma pesquisa criada</h2>
+                    <p>Crie sua primeira pesquisa e encontre colaboradores!</p>
+                    <a href="cadastro-pesquisa.html" class="btn btn-primary">Criar Pesquisa</a>
+                </div>
+                <div class="pesquisas-list" id="minhasPesquisasList"></div>
+            </div>
+
+            <!-- Tab: Candidaturas -->
+            <div class="tab-content hidden" id="tab-candidaturas">
+                <div class="empty-state hidden" id="emptyCandidaturas">
+                    <i class="fas fa-paper-plane"></i>
+                    <h2>Nenhuma candidatura</h2>
+                    <p>Explore oportunidades e candidate-se!</p>
+                    <a href="oportunidades.html" class="btn btn-primary">Ver Oportunidades</a>
+                </div>
+                <div class="pesquisas-list" id="candidaturasList"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Candidatos -->
+    <div class="modal" id="candidatosModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Candidatos</h2>
+                <button class="modal-close" onclick="closeModal('candidatosModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="candidatosModalBody">
+                <!-- Candidatos serão inseridos aqui -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('candidatosModal')">Fechar</button>
+                <button class="btn btn-primary" id="btnIniciarVotacao" onclick="iniciarVotacao()">
+                    <i class="fas fa-vote-yea"></i> Iniciar Votação
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let minhasPesquisas = [];
+        let candidaturas = [];
+        let currentPesquisaId = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!Auth.isAuthenticated()) return;
+
+            setupTabs();
+            setupSidebarToggle();
+            await loadData();
+            Auth.updateHeaderUserInfo();
+        });
+
+        async function loadData() {
+            try {
+                const userId = Auth.getCurrentUserId();
+                
+                // Carregar minhas pesquisas
+                const pesquisasResponse = await api.listPesquisas({ professorId: userId });
+                minhasPesquisas = pesquisasResponse.pesquisas || [];
+
+                // Carregar candidaturas (matches aceitos)
+                const matchesResponse = await api.findMatchesForUser(userId);
+                candidaturas = (matchesResponse.matches || []).filter(m => m.status === 'aceito');
+
+                document.getElementById('loadingState').classList.add('hidden');
+
+                // Atualizar contadores
+                document.getElementById('minhasCount').textContent = minhasPesquisas.length;
+                document.getElementById('candidaturasCount').textContent = candidaturas.length;
+
+                // Renderizar listas
+                renderMinhasPesquisas();
+                renderCandidaturas();
+
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                document.getElementById('loadingState').classList.add('hidden');
+            }
+        }
+
+        function renderMinhasPesquisas() {
+            const container = document.getElementById('minhasPesquisasList');
+            const empty = document.getElementById('emptyMinhas');
+
+            if (minhasPesquisas.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            container.innerHTML = minhasPesquisas.map(p => `
+                <div class="pesquisa-card">
+                    <div class="pesquisa-header">
+                        <span class="pesquisa-status ${p.status}">${formatStatus(p.status)}</span>
+                        <span class="pesquisa-date">${formatDate(p.createdAt)}</span>
+                    </div>
+                    <div class="pesquisa-body">
+                        <h3>${p.titulo}</h3>
+                        <p>${p.descricao || 'Sem descrição'}</p>
+                        <div class="pesquisa-tags">
+                            ${(p.areas || []).map(a => `<span class="tag">${a}</span>`).join('')}
+                        </div>
+                        <div class="pesquisa-meta">
+                            <span><i class="fas fa-users"></i> ${p.candidatos?.length || 0} candidatos</span>
+                            <span><i class="fas fa-user-check"></i> ${p.minParticipantes}-${p.maxParticipantes} vagas</span>
+                        </div>
+                    </div>
+                    <div class="pesquisa-actions">
+                        <button class="btn btn-sm btn-outline" onclick="verCandidatos('${p.pesquisaId}')">
+                            <i class="fas fa-users"></i> Ver Candidatos
+                        </button>
+                        <button class="btn btn-sm btn-outline" onclick="editarPesquisa('${p.pesquisaId}')">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        ${p.status === 'ativa' && p.candidatos?.length >= p.minParticipantes ? `
+                            <button class="btn btn-sm btn-primary" onclick="abrirVotacao('${p.pesquisaId}')">
+                                <i class="fas fa-vote-yea"></i> Votação
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCandidaturas() {
+            const container = document.getElementById('candidaturasList');
+            const empty = document.getElementById('emptyCandidaturas');
+
+            if (candidaturas.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            container.innerHTML = candidaturas.map(c => `
+                <div class="pesquisa-card candidatura">
+                    <div class="pesquisa-header">
+                        <div class="candidatura-score">
+                            <span class="score-badge">${c.score}%</span>
+                            <span>Match</span>
+                        </div>
+                        <span class="pesquisa-status aceito">Candidatura Aceita</span>
+                    </div>
+                    <div class="pesquisa-body">
+                        <h3>${c.titulo}</h3>
+                        <p>${c.descricao || 'Sem descrição'}</p>
+                        <div class="professor-info-mini">
+                            <i class="fas fa-user-tie"></i>
+                            <span>${c.professorNome || 'Professor'}</span>
+                            <a href="usuario.html?id=${c.professorId}" class="link-sm">Ver perfil</a>
+                        </div>
+                        <div class="pesquisa-tags">
+                            ${(c.areas || []).map(a => `<span class="tag">${a}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="pesquisa-actions">
+                        <a href="pesquisa.html?id=${c.pesquisaId}" class="btn btn-sm btn-outline">
+                            <i class="fas fa-eye"></i> Ver Detalhes
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function verCandidatos(pesquisaId) {
+            currentPesquisaId = pesquisaId;
+            
+            try {
+                const response = await api.getCandidatos(pesquisaId);
+                const candidatos = response.candidatos || [];
+                
+                const container = document.getElementById('candidatosModalBody');
+                
+                if (candidatos.length === 0) {
+                    container.innerHTML = '<p class="empty-message">Nenhum candidato ainda.</p>';
+                    document.getElementById('btnIniciarVotacao').style.display = 'none';
+                } else {
+                    container.innerHTML = `
+                        <div class="candidatos-list">
+                            ${candidatos.map(c => `
+                                <div class="candidato-item">
+                                    <div class="candidato-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="candidato-info">
+                                        <h4>${c.nome}</h4>
+                                        <p>${c.instituicao || '-'} • ${formatEscolaridade(c.escolaridade)}</p>
+                                        <div class="candidato-tags">
+                                            ${(c.areasInteresse || []).slice(0, 3).map(a => `<span class="tag">${a}</span>`).join('')}
+                                        </div>
+                                    </div>
+                                    <div class="candidato-score">
+                                        <span class="score">${c.score || 0}%</span>
+                                    </div>
+                                    <a href="usuario.html?id=${c.userId}" class="btn btn-sm btn-outline">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    
+                    const pesquisa = minhasPesquisas.find(p => p.pesquisaId === pesquisaId);
+                    if (pesquisa && candidatos.length >= pesquisa.minParticipantes) {
+                        document.getElementById('btnIniciarVotacao').style.display = 'block';
+                    } else {
+                        document.getElementById('btnIniciarVotacao').style.display = 'none';
+                    }
+                }
+
+                openModal('candidatosModal');
+
+            } catch (error) {
+                console.error('Erro ao carregar candidatos:', error);
+                showNotification('Erro ao carregar candidatos', 'error');
+            }
+        }
+
+        async function iniciarVotacao() {
+            if (!currentPesquisaId) return;
+
+            try {
+                const response = await api.getCandidatos(currentPesquisaId);
+                const candidatosIds = (response.candidatos || []).map(c => c.userId);
+
+                await api.iniciarVotacao(currentPesquisaId, candidatosIds);
+
+                showNotification('Votação iniciada com sucesso!', 'success');
+                closeModal('candidatosModal');
+                await loadData();
+
+            } catch (error) {
+                console.error('Erro ao iniciar votação:', error);
+                showNotification('Erro ao iniciar votação', 'error');
+            }
+        }
+
+        function abrirVotacao(pesquisaId) {
+            window.location.href = `votacao.html?id=${pesquisaId}`;
+        }
+
+        function editarPesquisa(pesquisaId) {
+            window.location.href = `cadastro-pesquisa.html?id=${pesquisaId}`;
+        }
+
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    const tabId = tab.dataset.tab;
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+                });
+            });
+        }
+
+        function setupSidebarToggle() {
+            const toggle = document.querySelector('.sidebar-toggle');
+            if (toggle) {
+                toggle.addEventListener('click', () => {
+                    document.querySelector('.sidebar').classList.toggle('collapsed');
+                });
+            }
+        }
+
+        function formatStatus(status) {
+            const statuses = {
+                'ativa': 'Ativa',
+                'votacao-aberta': 'Em Votação',
+                'grupo-formado': 'Grupo Formado',
+                'finalizada': 'Finalizada',
+                'inativa': 'Inativa'
+            };
+            return statuses[status] || status || '-';
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            return new Date(dateStr).toLocaleDateString('pt-BR');
+        }
+
+        function formatEscolaridade(esc) {
+            const niveis = {
+                'ensino-medio': 'Ensino Médio',
+                'superior-incompleto': 'Superior Incompleto',
+                'superior-completo': 'Superior Completo',
+                'pos-graduacao': 'Pós-Graduação',
+                'mestrado': 'Mestrado',
+                'doutorado': 'Doutorado',
+                'pos-doutorado': 'Pós-Doutorado'
+            };
+            return niveis[esc] || esc || '-';
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.classList.add('modal-open');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.classList.remove('modal-open');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i><span>${message}</span>`;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.classList.add('show'), 10);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+
+    <style>
+        .tabs-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-count {
+            background: var(--bg-secondary);
+            padding: 0.125rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+
+        .tab-btn.active .tab-count {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content.hidden {
+            display: none;
+        }
+
+        .pesquisas-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .pesquisa-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .pesquisa-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .pesquisa-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .pesquisa-status.ativa { background: var(--success-light); color: var(--success-color); }
+        .pesquisa-status.votacao-aberta { background: var(--warning-light); color: var(--warning-color); }
+        .pesquisa-status.grupo-formado { background: var(--primary-light); color: var(--primary-color); }
+        .pesquisa-status.aceito { background: var(--success-light); color: var(--success-color); }
+
+        .pesquisa-date {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .pesquisa-body h3 {
+            font-size: 1.125rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .pesquisa-body p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .pesquisa-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .pesquisa-meta {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .pesquisa-meta i {
+            margin-right: 0.25rem;
+        }
+
+        .pesquisa-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .candidatura-score {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .score-badge {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .professor-info-mini {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .link-sm {
+            color: var(--primary-color);
+            font-size: 0.75rem;
+        }
+
+        .candidatos-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .candidato-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .candidato-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .candidato-info {
+            flex: 1;
+        }
+
+        .candidato-info h4 {
+            margin-bottom: 0.25rem;
+        }
+
+        .candidato-info p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .candidato-tags {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .candidato-tags .tag {
+            font-size: 0.65rem;
+            padding: 0.125rem 0.5rem;
+        }
+
+        .candidato-score .score {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+
+        .page-title h1 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-title p {
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .loading-state, .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--text-tertiary);
+            margin-bottom: 1rem;
+        }
+
+        .hidden { display: none !important; }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</body>
+</html>

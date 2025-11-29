@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - CloudOps</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cloud"></i>
+                <span>CloudOps</span>
+            </a>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="matches.html">
+                        <i class="fas fa-heart"></i>
+                        <span>Matches</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="minhas-pesquisas.html">
+                        <i class="fas fa-flask"></i>
+                        <span>Minhas Pesquisas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="oportunidades.html">
+                        <i class="fas fa-search"></i>
+                        <span>Oportunidades</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="notificacoes.html">
+                        <i class="fas fa-bell"></i>
+                        <span>Notificações</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-divider"></div>
+            
+            <ul>
+                <li>
+                    <a href="perfil.html">
+                        <i class="fas fa-user"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="logout()" class="logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <!-- Top Bar -->
+        <header class="dashboard-header">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="header-actions">
+                <button class="notification-btn" onclick="window.location.href='notificacoes.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">0</span>
+                </button>
+                <div class="user-menu" onclick="window.location.href='perfil.html'">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name" id="headerUserName">-</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Profile Content -->
+        <div class="dashboard-content">
+            <!-- Loading State -->
+            <div class="loading-state" id="loadingState">
+                <div class="spinner"></div>
+                <p>Carregando perfil...</p>
+            </div>
+
+            <!-- Error State -->
+            <div class="error-state hidden" id="errorState">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Perfil não encontrado</h2>
+                <p>O usuário que você está procurando não existe ou foi removido.</p>
+                <a href="oportunidades.html" class="btn btn-primary">Voltar</a>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="profile-content hidden" id="profileContent">
+                <!-- Profile Header -->
+                <section class="profile-header-section">
+                    <div class="profile-cover">
+                        <div class="profile-avatar-large">
+                            <img id="profileAvatar" src="" alt="Avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <i class="fas fa-user" style="display:none;"></i>
+                        </div>
+                    </div>
+                    <div class="profile-info-header">
+                        <div class="profile-name-section">
+                            <h1 id="profileName">-</h1>
+                            <span class="profile-type" id="profileType">-</span>
+                        </div>
+                        <p class="profile-institution" id="profileInstitution">-</p>
+                        <p class="profile-bio" id="profileBio">-</p>
+                        <div class="profile-actions" id="profileActions">
+                            <!-- Ações dinâmicas -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Profile Stats -->
+                <section class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="statPublicacoes">0</span>
+                        <span class="stat-label">Publicações</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="statPesquisas">0</span>
+                        <span class="stat-label">Pesquisas</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="statGrupos">0</span>
+                        <span class="stat-label">Grupos</span>
+                    </div>
+                </section>
+
+                <!-- Profile Details Grid -->
+                <div class="profile-grid">
+                    <!-- Informações -->
+                    <section class="dashboard-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-user"></i> Informações</h2>
+                        </div>
+                        <div class="profile-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Instituição</span>
+                                <span class="detail-value" id="detailInstituicao">-</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Escolaridade</span>
+                                <span class="detail-value" id="detailEscolaridade">-</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Lattes</span>
+                                <a class="detail-value link" id="detailLattes" href="#" target="_blank">-</a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Áreas de Interesse -->
+                    <section class="dashboard-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-lightbulb"></i> Áreas de Interesse</h2>
+                        </div>
+                        <div class="tags-container" id="profileAreas">
+                            <span class="empty-message">-</span>
+                        </div>
+                    </section>
+
+                    <!-- Habilidades Técnicas -->
+                    <section class="dashboard-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-code"></i> Habilidades</h2>
+                        </div>
+                        <div class="tags-container" id="profileHabilidades">
+                            <span class="empty-message">-</span>
+                        </div>
+                    </section>
+
+                    <!-- Idiomas -->
+                    <section class="dashboard-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-globe"></i> Idiomas</h2>
+                        </div>
+                        <div class="tags-container" id="profileIdiomas">
+                            <span class="empty-message">-</span>
+                        </div>
+                    </section>
+
+                    <!-- Pesquisas Publicadas -->
+                    <section class="dashboard-card full-width" id="pesquisasSection">
+                        <div class="card-header">
+                            <h2><i class="fas fa-flask"></i> Pesquisas Publicadas</h2>
+                        </div>
+                        <div class="researches-list" id="pesquisasList">
+                            <p class="empty-message">Nenhuma pesquisa publicada.</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Obter ID do perfil da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const profileId = urlParams.get('id');
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!profileId) {
+                showError();
+                return;
+            }
+
+            await loadUserProfile(profileId);
+        });
+
+        async function loadUserProfile(userId) {
+            try {
+                const response = await api.getPerfil(userId);
+                
+                if (!response || response.error) {
+                    showError();
+                    return;
+                }
+
+                renderProfile(response);
+                await loadUserPesquisas(userId);
+                
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('profileContent').classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Erro ao carregar perfil:', error);
+                showError();
+            }
+        }
+
+        function renderProfile(user) {
+            document.getElementById('profileName').textContent = user.nome || 'Usuário';
+            document.getElementById('profileType').textContent = formatUserType(user.tipoUsuario);
+            document.getElementById('profileInstitution').textContent = user.instituicao || '-';
+            document.getElementById('profileBio').textContent = user.bio || 'Nenhuma descrição disponível.';
+            
+            if (user.foto) {
+                const avatar = document.getElementById('profileAvatar');
+                avatar.src = user.foto;
+                avatar.style.display = 'block';
+            }
+
+            document.getElementById('detailInstituicao').textContent = user.instituicao || '-';
+            document.getElementById('detailEscolaridade').textContent = formatEscolaridade(user.escolaridade);
+            
+            const lattesLink = document.getElementById('detailLattes');
+            if (user.lattes) {
+                lattesLink.href = user.lattes;
+                lattesLink.textContent = 'Ver Lattes';
+            } else {
+                lattesLink.textContent = 'Não informado';
+            }
+
+            document.getElementById('statPublicacoes').textContent = user.numPublicacoes || 0;
+
+            renderTags('profileAreas', user.areasInteresse);
+            renderTags('profileHabilidades', user.habilidades);
+            renderTags('profileIdiomas', user.idiomas);
+
+            // Ações do perfil
+            const actionsContainer = document.getElementById('profileActions');
+            const currentUserId = Auth.getCurrentUserId();
+
+            if (currentUserId && currentUserId !== user.userId) {
+                actionsContainer.innerHTML = `
+                    <button class="btn btn-primary" onclick="contactUser('${user.userId}')">
+                        <i class="fas fa-envelope"></i> Entrar em Contato
+                    </button>
+                `;
+            }
+        }
+
+        async function loadUserPesquisas(userId) {
+            try {
+                const response = await api.listPesquisas({ professorId: userId });
+                const pesquisas = response.pesquisas || [];
+
+                document.getElementById('statPesquisas').textContent = pesquisas.length;
+
+                if (pesquisas.length === 0) {
+                    return;
+                }
+
+                const container = document.getElementById('pesquisasList');
+                container.innerHTML = pesquisas.map(p => `
+                    <div class="research-item">
+                        <div class="research-status ${p.status === 'ativa' ? 'active' : 'pending'}"></div>
+                        <div class="research-info">
+                            <h4>${p.titulo}</h4>
+                            <p>${(p.areas || []).join(', ')}</p>
+                            <div class="research-meta">
+                                <span><i class="fas fa-users"></i> ${p.minParticipantes}-${p.maxParticipantes} participantes</span>
+                                <span><i class="fas fa-clock"></i> ${formatStatus(p.status)}</span>
+                            </div>
+                        </div>
+                        <div class="research-actions">
+                            <a href="pesquisa.html?id=${p.pesquisaId}" class="btn btn-sm btn-outline">Ver Detalhes</a>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Erro ao carregar pesquisas:', error);
+            }
+        }
+
+        function renderTags(containerId, items) {
+            const container = document.getElementById(containerId);
+            if (!items || items.length === 0) {
+                container.innerHTML = '<span class="empty-message">Não informado</span>';
+                return;
+            }
+            container.innerHTML = items.map(item => `<span class="tag">${item}</span>`).join('');
+        }
+
+        function showError() {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('errorState').classList.remove('hidden');
+        }
+
+        function formatUserType(tipo) {
+            const tipos = { 'aluno': 'Aluno', 'professor': 'Professor', 'pesquisador': 'Pesquisador' };
+            return tipos[tipo] || tipo || '-';
+        }
+
+        function formatEscolaridade(esc) {
+            const niveis = {
+                'ensino-medio': 'Ensino Médio',
+                'superior-incompleto': 'Superior Incompleto',
+                'superior-completo': 'Superior Completo',
+                'pos-graduacao': 'Pós-Graduação',
+                'mestrado': 'Mestrado',
+                'doutorado': 'Doutorado',
+                'pos-doutorado': 'Pós-Doutorado'
+            };
+            return niveis[esc] || esc || '-';
+        }
+
+        function formatStatus(status) {
+            const statuses = { 'ativa': 'Ativa', 'votacao-aberta': 'Em Votação', 'grupo-formado': 'Grupo Formado', 'finalizada': 'Finalizada' };
+            return statuses[status] || status || '-';
+        }
+
+        function contactUser(userId) {
+            // TODO: Implementar sistema de mensagens
+            alert('Sistema de mensagens em desenvolvimento');
+        }
+    </script>
+</body>
+</html>

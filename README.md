@@ -20,6 +20,8 @@ CloudOps/
 │   ├── css/
 │   │   └── styles.css          # Estilos globais
 │   └── js/
+│       ├── api.js              # Cliente de API
+│       ├── config.js           # Configurações
 │       ├── app.js              # JavaScript principal
 │       ├── cadastro-perfil.js  # Lógica do cadastro de perfil
 │       ├── cadastro-pesquisa.js# Lógica do cadastro de pesquisa
@@ -27,13 +29,18 @@ CloudOps/
 │       └── matches.js          # Lógica dos matches
 ├── backend/
 │   ├── template.yaml           # AWS SAM Template
+│   ├── samconfig.toml          # Configuração de deploy
+│   ├── deploy.sh               # Script de deploy
 │   └── lambda/
-│       ├── cadastroPerfil.js   # CRUD de perfis
-│       ├── cadastroPesquisa.js # CRUD de pesquisas
-│       ├── matchingEngine.js   # Algoritmo de matching
-│       ├── votacao.js          # Sistema de votação
-│       ├── notificacoes.js     # Sistema de notificações
-│       └── package.json        # Dependências Node.js
+│       ├── api/                # Handlers da API
+│       │   ├── auth.js         # Autenticação Cognito
+│       │   ├── perfil.js       # CRUD de perfis
+│       │   ├── pesquisa.js     # CRUD de pesquisas
+│       │   ├── matching.js     # Algoritmo de matching
+│       │   ├── votacao.js      # Sistema de votação
+│       │   ├── notificacoes.js # Sistema de notificações
+│       │   └── package.json    # Dependências
+│       └── [legacy handlers]   # Handlers antigos
 └── README.md
 ```
 
@@ -76,6 +83,11 @@ CloudOps/
 
 ## 🚀 Como Executar
 
+### Pré-requisitos
+- Node.js 18+
+- AWS CLI configurado
+- AWS SAM CLI instalado
+
 ### Frontend (Local)
 ```bash
 cd frontend
@@ -88,11 +100,28 @@ npx serve .
 cd backend
 
 # Instalar dependências das Lambdas
-cd lambda && npm install && cd ..
+cd lambda/api && npm install && cd ../..
 
-# Deploy com SAM
+# Build e Deploy com SAM
 sam build
 sam deploy --guided
+
+# Ou use o script de deploy (Linux/Mac)
+chmod +x deploy.sh
+./deploy.sh dev
+```
+
+### Configuração do Frontend após Deploy
+Após o deploy, atualize o arquivo `frontend/js/config.js` com os valores retornados:
+```javascript
+const CONFIG = {
+    apiUrl: 'SUA_API_URL',
+    cognito: {
+        userPoolId: 'SEU_USER_POOL_ID',
+        clientId: 'SEU_CLIENT_ID',
+        region: 'us-east-1'
+    }
+};
 ```
 
 ## 📊 Fluxo Principal
@@ -107,15 +136,50 @@ sam deploy --guided
 
 ## 📝 API Endpoints
 
+### Autenticação
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/auth/register` | Registrar usuário |
+| POST | `/auth/confirm` | Confirmar email |
+| POST | `/auth/login` | Login |
+| GET | `/auth/me` | Dados do usuário logado |
+
+### Perfil
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
 | POST | `/perfil` | Criar perfil |
 | GET | `/perfil/{userId}` | Buscar perfil |
+| PUT | `/perfil/{userId}` | Atualizar perfil |
+| GET | `/perfil` | Listar perfis |
+
+### Pesquisa
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
 | POST | `/pesquisa` | Criar pesquisa |
-| GET | `/pesquisas` | Listar pesquisas |
-| GET | `/matches/{pesquisaId}` | Buscar matches |
-| POST | `/votacao` | Registrar voto |
-| GET | `/votacao/{pesquisaId}` | Ver votação |
+| GET | `/pesquisa/{pesquisaId}` | Buscar pesquisa |
+| PUT | `/pesquisa/{pesquisaId}` | Atualizar pesquisa |
+| DELETE | `/pesquisa/{pesquisaId}` | Deletar pesquisa |
+| GET | `/pesquisa` | Listar pesquisas |
+| POST | `/pesquisa/{id}/candidatar` | Candidatar-se |
+| GET | `/pesquisa/{id}/candidatos` | Listar candidatos |
+
+### Matching
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/matches/{pesquisaId}` | Matches para pesquisa |
+| GET | `/matches/user/{userId}` | Matches para usuário |
+| POST | `/matches/accept` | Aceitar match |
+| POST | `/matches/reject` | Rejeitar match |
+
+### Votação
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/votacao/iniciar` | Iniciar votação |
+| GET | `/votacao/{pesquisaId}` | Status da votação |
+| GET | `/votacao/{pid}/candidatos/{uid}` | Candidatos para votar |
+| POST | `/votacao/votar` | Registrar voto |
+| POST | `/votacao/finalizar` | Finalizar votação |
+| GET | `/votacao/{pesquisaId}/resultado` | Resultado |
 | POST | `/notificacao` | Enviar notificação |
 
 ---

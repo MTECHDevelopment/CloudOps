@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oportunidades - CloudOps</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .oportunidades-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Filters */
+        .filters-section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .filters-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: #f8f9fa;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn-filter {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-filter:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-clear {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-clear:hover {
+            background: #f8f9fa;
+        }
+
+        /* Results */
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .results-count {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .sort-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Oportunidades Grid */
+        .oportunidades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .oportunidade-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .oportunidade-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            flex: 1;
+        }
+
+        .compatibility-badge {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            margin-left: 1rem;
+        }
+
+        .compatibility-badge.medium {
+            background: linear-gradient(135deg, #FF9800, #FFC107);
+        }
+
+        .compatibility-badge.low {
+            background: linear-gradient(135deg, #9E9E9E, #BDBDBD);
+        }
+
+        .professor-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .professor-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .professor-details {
+            flex: 1;
+        }
+
+        .professor-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .professor-name a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .professor-name a:hover {
+            color: var(--primary-color);
+        }
+
+        .professor-instituicao {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: #E3F2FD;
+            color: #1976D2;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .tag.skill {
+            background: #F3E5F5;
+            color: #7B1FA2;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .vagas-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .vagas-info i {
+            color: var(--primary-color);
+        }
+
+        .vagas-count {
+            font-weight: 600;
+            color: #4CAF50;
+        }
+
+        .vagas-count.limited {
+            color: #FF9800;
+        }
+
+        .vagas-count.full {
+            color: #F44336;
+        }
+
+        .btn-ver-mais {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-ver-mais:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--white);
+            border-radius: 12px;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            padding: 3rem;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e0e0e0;
+            background: var(--white);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pagination button:hover,
+        .pagination button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .oportunidades-container {
+                padding: 1rem;
+            }
+
+            .filters-row {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+
+            .oportunidades-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-cloud"></i>
+                <span>CloudOps</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="matches.html" class="nav-item">
+                <i class="fas fa-heart"></i>
+                <span>Matches</span>
+            </a>
+            <a href="minhas-pesquisas.html" class="nav-item">
+                <i class="fas fa-flask"></i>
+                <span>Minhas Pesquisas</span>
+            </a>
+            <a href="oportunidades.html" class="nav-item active">
+                <i class="fas fa-search"></i>
+                <span>Oportunidades</span>
+            </a>
+            <a href="notificacoes.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Notificações</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="perfil.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Meu Perfil</span>
+            </a>
+            <a href="#" class="nav-item" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="oportunidades-container">
+            <div class="page-header">
+                <h1><i class="fas fa-search"></i> Explorar Oportunidades</h1>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label>Área de Interesse</label>
+                        <select id="filterArea">
+                            <option value="">Todas as áreas</option>
+                            <option value="ia">Inteligência Artificial</option>
+                            <option value="ml">Machine Learning</option>
+                            <option value="data-science">Data Science</option>
+                            <option value="redes">Redes de Computadores</option>
+                            <option value="seguranca">Segurança da Informação</option>
+                            <option value="iot">IoT</option>
+                            <option value="cloud">Cloud Computing</option>
+                            <option value="robotica">Robótica</option>
+                            <option value="bioinformatica">Bioinformática</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Escolaridade Mínima</label>
+                        <select id="filterEscolaridade">
+                            <option value="">Qualquer</option>
+                            <option value="ensino-medio">Ensino Médio</option>
+                            <option value="superior-incompleto">Superior Incompleto</option>
+                            <option value="superior-completo">Superior Completo</option>
+                            <option value="mestrado">Mestrado</option>
+                            <option value="doutorado">Doutorado</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Instituição</label>
+                        <input type="text" id="filterInstituicao" placeholder="Buscar por instituição...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Vagas Disponíveis</label>
+                        <select id="filterVagas">
+                            <option value="">Qualquer</option>
+                            <option value="com-vagas">Com vagas</option>
+                            <option value="ultima-vaga">Última vaga</option>
+                        </select>
+                    </div>
+                    <button class="btn-filter" onclick="applyFilters()">
+                        <i class="fas fa-filter"></i> Filtrar
+                    </button>
+                    <button class="btn-clear" onclick="clearFilters()">Limpar</button>
+                </div>
+            </div>
+
+            <!-- Results Info -->
+            <div class="results-info">
+                <span class="results-count" id="resultsCount">Carregando...</span>
+                <select class="sort-select" id="sortSelect" onchange="sortResults()">
+                    <option value="compatibilidade">Maior compatibilidade</option>
+                    <option value="recentes">Mais recentes</option>
+                    <option value="vagas">Mais vagas</option>
+                    <option value="titulo">Ordem alfabética</option>
+                </select>
+            </div>
+
+            <!-- Oportunidades Grid -->
+            <div id="oportunidadesGrid" class="oportunidades-grid">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination" style="display: none;">
+                <button onclick="prevPage()" id="btnPrev"><i class="fas fa-chevron-left"></i></button>
+                <button class="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button onclick="nextPage()" id="btnNext"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        // Verificar autenticação
+        requireAuth();
+
+        let allOportunidades = [];
+        let filteredOportunidades = [];
+        let currentPage = 1;
+        const itemsPerPage = 9;
+
+        // Mock data para oportunidades
+        function getMockOportunidades() {
+            return [
+                {
+                    id: 'pesq-001',
+                    titulo: 'Desenvolvimento de Algoritmos de Machine Learning para Análise de Dados Médicos',
+                    descricao: 'Pesquisa focada em desenvolver algoritmos de aprendizado de máquina para análise de imagens médicas e predição de diagnósticos.',
+                    professorId: 'prof-001',
+                    professorNome: 'Dr. Carlos Alberto',
+                    professorInstituicao: 'USP - Universidade de São Paulo',
+                    areas: ['Machine Learning', 'Data Science', 'Saúde'],
+                    habilidades: ['Python', 'TensorFlow', 'PyTorch'],
+                    escolaridadeMinima: 'superior-incompleto',
+                    vagas: 3,
+                    vagasPreenchidas: 1,
+                    compatibilidade: 95,
+                    createdAt: '2024-01-15'
+                },
+                {
+                    id: 'pesq-002',
+                    titulo: 'Segurança em IoT para Smart Cities',
+                    descricao: 'Investigação de vulnerabilidades em dispositivos IoT e desenvolvimento de protocolos de segurança para cidades inteligentes.',
+                    professorId: 'prof-002',
+                    professorNome: 'Dra. Ana Paula',
+                    professorInstituicao: 'UNICAMP',
+                    areas: ['IoT', 'Segurança da Informação', 'Redes'],
+                    habilidades: ['C++', 'Redes', 'Criptografia'],
+                    escolaridadeMinima: 'mestrado',
+                    vagas: 2,
+                    vagasPreenchidas: 1,
+                    compatibilidade: 87,
+                    createdAt: '2024-01-10'
+                },
+                {
+                    id: 'pesq-003',
+                    titulo: 'Cloud Computing para Processamento de Big Data',
+                    descricao: 'Desenvolvimento de arquiteturas cloud otimizadas para processamento de grandes volumes de dados em tempo real.',
+                    professorId: 'prof-003',
+                    professorNome: 'Dr. Ricardo Santos',
+                    professorInstituicao: 'UFRJ',
+                    areas: ['Cloud Computing', 'Big Data', 'Data Science'],
+                    habilidades: ['AWS', 'Spark', 'Hadoop'],
+                    escolaridadeMinima: 'superior-completo',
+                    vagas: 4,
+                    vagasPreenchidas: 2,
+                    compatibilidade: 78,
+                    createdAt: '2024-01-08'
+                },
+                {
+                    id: 'pesq-004',
+                    titulo: 'Robótica Assistiva para Pessoas com Deficiência',
+                    descricao: 'Projeto de desenvolvimento de robôs assistivos para auxiliar pessoas com deficiência motora em suas atividades diárias.',
+                    professorId: 'prof-004',
+                    professorNome: 'Dra. Fernanda Lima',
+                    professorInstituicao: 'UFMG',
+                    areas: ['Robótica', 'IA', 'Acessibilidade'],
+                    habilidades: ['ROS', 'Python', 'Eletrônica'],
+                    escolaridadeMinima: 'superior-incompleto',
+                    vagas: 3,
+                    vagasPreenchidas: 3,
+                    compatibilidade: 72,
+                    createdAt: '2024-01-05'
+                },
+                {
+                    id: 'pesq-005',
+                    titulo: 'Bioinformática Aplicada à Genômica',
+                    descricao: 'Análise computacional de dados genômicos para identificação de marcadores genéticos associados a doenças.',
+                    professorId: 'prof-005',
+                    professorNome: 'Dr. Marcos Oliveira',
+                    professorInstituicao: 'USP - Ribeirão Preto',
+                    areas: ['Bioinformática', 'Data Science', 'Saúde'],
+                    habilidades: ['R', 'Python', 'Estatística'],
+                    escolaridadeMinima: 'doutorado',
+                    vagas: 2,
+                    vagasPreenchidas: 0,
+                    compatibilidade: 65,
+                    createdAt: '2024-01-12'
+                },
+                {
+                    id: 'pesq-006',
+                    titulo: 'NLP para Análise de Sentimentos em Redes Sociais',
+                    descricao: 'Desenvolvimento de modelos de processamento de linguagem natural para análise de sentimentos em posts de redes sociais.',
+                    professorId: 'prof-006',
+                    professorNome: 'Dra. Juliana Costa',
+                    professorInstituicao: 'PUC-Rio',
+                    areas: ['NLP', 'Machine Learning', 'IA'],
+                    habilidades: ['Python', 'NLTK', 'Transformers'],
+                    escolaridadeMinima: 'superior-incompleto',
+                    vagas: 5,
+                    vagasPreenchidas: 2,
+                    compatibilidade: 91,
+                    createdAt: '2024-01-18'
+                }
+            ];
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOportunidades();
+        });
+
+        async function loadOportunidades() {
+            try {
+                // Em produção, usar a API
+                // const response = await CloudOpsAPI.pesquisa.listar({ status: 'ativa' });
+                // allOportunidades = response.pesquisas;
+                
+                // Mock data
+                allOportunidades = getMockOportunidades();
+                filteredOportunidades = [...allOportunidades];
+                
+                renderOportunidades();
+            } catch (error) {
+                console.error('Erro ao carregar oportunidades:', error);
+                showError();
+            }
+        }
+
+        function renderOportunidades() {
+            const grid = document.getElementById('oportunidadesGrid');
+            
+            if (filteredOportunidades.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <i class="fas fa-search"></i>
+                        <h3>Nenhuma oportunidade encontrada</h3>
+                        <p>Tente ajustar os filtros para encontrar mais resultados.</p>
+                        <button class="btn-clear" onclick="clearFilters()">Limpar filtros</button>
+                    </div>
+                `;
+                document.getElementById('resultsCount').textContent = '0 oportunidades encontradas';
+                document.getElementById('pagination').style.display = 'none';
+                return;
+            }
+
+            // Paginação
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageItems = filteredOportunidades.slice(start, end);
+
+            grid.innerHTML = pageItems.map(op => renderCard(op)).join('');
+            
+            document.getElementById('resultsCount').textContent = 
+                `${filteredOportunidades.length} oportunidade${filteredOportunidades.length !== 1 ? 's' : ''} encontrada${filteredOportunidades.length !== 1 ? 's' : ''}`;
+            
+            updatePagination();
+        }
+
+        function renderCard(op) {
+            const vagasDisponiveis = op.vagas - op.vagasPreenchidas;
+            const iniciais = op.professorNome.split(' ').map(n => n[0]).join('').substring(0, 2);
+            
+            let compatBadgeClass = '';
+            if (op.compatibilidade >= 80) {
+                compatBadgeClass = '';
+            } else if (op.compatibilidade >= 60) {
+                compatBadgeClass = 'medium';
+            } else {
+                compatBadgeClass = 'low';
+            }
+
+            let vagasClass = '';
+            if (vagasDisponiveis === 0) {
+                vagasClass = 'full';
+            } else if (vagasDisponiveis === 1) {
+                vagasClass = 'limited';
+            }
+
+            return `
+                <div class="oportunidade-card">
+                    <div class="card-header">
+                        <h3>${op.titulo}</h3>
+                        <span class="compatibility-badge ${compatBadgeClass}">${op.compatibilidade}% match</span>
+                    </div>
+                    
+                    <div class="professor-info">
+                        <div class="professor-avatar">${iniciais}</div>
+                        <div class="professor-details">
+                            <div class="professor-name">
+                                <a href="usuario.html?id=${op.professorId}">${op.professorNome}</a>
+                            </div>
+                            <div class="professor-instituicao">${op.professorInstituicao}</div>
+                        </div>
+                    </div>
+                    
+                    <p class="card-description">${op.descricao}</p>
+                    
+                    <div class="card-tags">
+                        ${op.areas.slice(0, 3).map(a => `<span class="tag">${a}</span>`).join('')}
+                        ${op.habilidades.slice(0, 2).map(h => `<span class="tag skill">${h}</span>`).join('')}
+                    </div>
+                    
+                    <div class="card-meta">
+                        <div class="vagas-info">
+                            <i class="fas fa-users"></i>
+                            <span class="vagas-count ${vagasClass}">
+                                ${vagasDisponiveis === 0 ? 'Sem vagas' : `${vagasDisponiveis} vaga${vagasDisponiveis !== 1 ? 's' : ''}`}
+                            </span>
+                        </div>
+                        <a href="pesquisa.html?id=${op.id}" class="btn-ver-mais">
+                            Ver Detalhes
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function applyFilters() {
+            const area = document.getElementById('filterArea').value.toLowerCase();
+            const escolaridade = document.getElementById('filterEscolaridade').value;
+            const instituicao = document.getElementById('filterInstituicao').value.toLowerCase();
+            const vagas = document.getElementById('filterVagas').value;
+
+            filteredOportunidades = allOportunidades.filter(op => {
+                // Filtro por área
+                if (area && !op.areas.some(a => a.toLowerCase().includes(area))) {
+                    return false;
+                }
+
+                // Filtro por escolaridade
+                // (simplificado - em produção seria mais complexo)
+                
+                // Filtro por instituição
+                if (instituicao && !op.professorInstituicao.toLowerCase().includes(instituicao)) {
+                    return false;
+                }
+
+                // Filtro por vagas
+                const vagasDisponiveis = op.vagas - op.vagasPreenchidas;
+                if (vagas === 'com-vagas' && vagasDisponiveis === 0) {
+                    return false;
+                }
+                if (vagas === 'ultima-vaga' && vagasDisponiveis !== 1) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            currentPage = 1;
+            sortResults();
+        }
+
+        function sortResults() {
+            const sortBy = document.getElementById('sortSelect').value;
+
+            switch (sortBy) {
+                case 'compatibilidade':
+                    filteredOportunidades.sort((a, b) => b.compatibilidade - a.compatibilidade);
+                    break;
+                case 'recentes':
+                    filteredOportunidades.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    break;
+                case 'vagas':
+                    filteredOportunidades.sort((a, b) => (b.vagas - b.vagasPreenchidas) - (a.vagas - a.vagasPreenchidas));
+                    break;
+                case 'titulo':
+                    filteredOportunidades.sort((a, b) => a.titulo.localeCompare(b.titulo));
+                    break;
+            }
+
+            renderOportunidades();
+        }
+
+        function clearFilters() {
+            document.getElementById('filterArea').value = '';
+            document.getElementById('filterEscolaridade').value = '';
+            document.getElementById('filterInstituicao').value = '';
+            document.getElementById('filterVagas').value = '';
+            
+            filteredOportunidades = [...allOportunidades];
+            currentPage = 1;
+            sortResults();
+        }
+
+        function updatePagination() {
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(filteredOportunidades.length / itemsPerPage);
+            
+            if (totalPages <= 1) {
+                pagination.style.display = 'none';
+                return;
+            }
+
+            pagination.style.display = 'flex';
+            
+            let html = `<button onclick="prevPage()" ${currentPage === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i></button>`;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button onclick="goToPage(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
+            }
+            
+            html += `<button onclick="nextPage()" ${currentPage === totalPages ? 'disabled' : ''}><i class="fas fa-chevron-right"></i></button>`;
+            
+            pagination.innerHTML = html;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderOportunidades();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                goToPage(currentPage - 1);
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredOportunidades.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                goToPage(currentPage + 1);
+            }
+        }
+
+        function showError() {
+            document.getElementById('oportunidadesGrid').innerHTML = `
+                <div class="empty-state" style="grid-column: 1/-1;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Erro ao carregar oportunidades</h3>
+                    <p>Tente recarregar a página.</p>
+                    <button class="btn-filter" onclick="location.reload()">Recarregar</button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - CloudOps</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cloud"></i>
+                <span>CloudOps</span>
+            </a>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="matches.html">
+                        <i class="fas fa-heart"></i>
+                        <span>Matches</span>
+                        <span class="badge" id="matchesBadge">0</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="minhas-pesquisas.html">
+                        <i class="fas fa-flask"></i>
+                        <span>Minhas Pesquisas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="oportunidades.html">
+                        <i class="fas fa-search"></i>
+                        <span>Oportunidades</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="notificacoes.html">
+                        <i class="fas fa-bell"></i>
+                        <span>Notificações</span>
+                        <span class="badge" id="notifBadge">0</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-divider"></div>
+            
+            <ul>
+                <li class="active">
+                    <a href="perfil.html">
+                        <i class="fas fa-user"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="logout()" class="logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <!-- Top Bar -->
+        <header class="dashboard-header">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="header-actions">
+                <button class="notification-btn" onclick="window.location.href='notificacoes.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count" id="headerNotifCount">0</span>
+                </button>
+                <div class="user-menu" onclick="window.location.href='perfil.html'">
+                    <div class="user-avatar">
+                        <img id="headerAvatar" src="" alt="Avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <i class="fas fa-user" style="display:none;"></i>
+                    </div>
+                    <span class="user-name" id="headerUserName">Carregando...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Profile Content -->
+        <div class="dashboard-content">
+            <!-- Profile Header -->
+            <section class="profile-header-section">
+                <div class="profile-cover">
+                    <div class="profile-avatar-large">
+                        <img id="profileAvatar" src="" alt="Avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <i class="fas fa-user" style="display:none;"></i>
+                        <button class="avatar-edit-btn" onclick="editAvatar()">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="profile-info-header">
+                    <div class="profile-name-section">
+                        <h1 id="profileName">Carregando...</h1>
+                        <span class="profile-type" id="profileType">-</span>
+                    </div>
+                    <p class="profile-institution" id="profileInstitution">-</p>
+                    <p class="profile-bio" id="profileBio">-</p>
+                    <div class="profile-actions">
+                        <button class="btn btn-primary" onclick="editProfile()">
+                            <i class="fas fa-edit"></i> Editar Perfil
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Stats -->
+            <section class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-value" id="statMatches">0</span>
+                    <span class="stat-label">Matches</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="statPesquisas">0</span>
+                    <span class="stat-label">Pesquisas</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="statPublicacoes">0</span>
+                    <span class="stat-label">Publicações</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="statGrupos">0</span>
+                    <span class="stat-label">Grupos</span>
+                </div>
+            </section>
+
+            <!-- Profile Details Grid -->
+            <div class="profile-grid">
+                <!-- Informações Pessoais -->
+                <section class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-user"></i> Informações Pessoais</h2>
+                    </div>
+                    <div class="profile-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Email</span>
+                            <span class="detail-value" id="profileEmail">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Telefone</span>
+                            <span class="detail-value" id="profileTelefone">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Instituição</span>
+                            <span class="detail-value" id="profileInstituicaoDetail">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Escolaridade</span>
+                            <span class="detail-value" id="profileEscolaridade">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Lattes</span>
+                            <a class="detail-value link" id="profileLattes" href="#" target="_blank">-</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Áreas de Interesse -->
+                <section class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-lightbulb"></i> Áreas de Interesse</h2>
+                    </div>
+                    <div class="tags-container" id="profileAreas">
+                        <span class="tag">Carregando...</span>
+                    </div>
+                </section>
+
+                <!-- Habilidades Técnicas -->
+                <section class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-code"></i> Habilidades Técnicas</h2>
+                    </div>
+                    <div class="tags-container" id="profileHabilidades">
+                        <span class="tag">Carregando...</span>
+                    </div>
+                </section>
+
+                <!-- Idiomas -->
+                <section class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-globe"></i> Idiomas</h2>
+                    </div>
+                    <div class="tags-container" id="profileIdiomas">
+                        <span class="tag">Carregando...</span>
+                    </div>
+                </section>
+
+                <!-- Experiência -->
+                <section class="dashboard-card full-width">
+                    <div class="card-header">
+                        <h2><i class="fas fa-briefcase"></i> Experiência</h2>
+                    </div>
+                    <div class="experience-list" id="profileExperiencia">
+                        <p class="empty-message">Nenhuma experiência cadastrada.</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Edição -->
+    <div class="modal" id="editProfileModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Editar Perfil</h2>
+                <button class="modal-close" onclick="closeModal('editProfileModal')">&times;</button>
+            </div>
+            <form id="editProfileForm" class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="editNome">Nome Completo</label>
+                        <input type="text" id="editNome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTelefone">Telefone</label>
+                        <input type="tel" id="editTelefone">
+                    </div>
+                    <div class="form-group">
+                        <label for="editInstituicao">Instituição</label>
+                        <input type="text" id="editInstituicao">
+                    </div>
+                    <div class="form-group">
+                        <label for="editEscolaridade">Escolaridade</label>
+                        <select id="editEscolaridade">
+                            <option value="ensino-medio">Ensino Médio</option>
+                            <option value="superior-incompleto">Superior Incompleto</option>
+                            <option value="superior-completo">Superior Completo</option>
+                            <option value="pos-graduacao">Pós-Graduação</option>
+                            <option value="mestrado">Mestrado</option>
+                            <option value="doutorado">Doutorado</option>
+                            <option value="pos-doutorado">Pós-Doutorado</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="editBio">Biografia</label>
+                        <textarea id="editBio" rows="3" placeholder="Conte um pouco sobre você..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLattes">Link do Lattes</label>
+                        <input type="url" id="editLattes" placeholder="http://lattes.cnpq.br/...">
+                    </div>
+                    <div class="form-group">
+                        <label for="editPublicacoes">Número de Publicações</label>
+                        <input type="number" id="editPublicacoes" min="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('editProfileModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/perfil.js"></script>
+</body>
+</html>

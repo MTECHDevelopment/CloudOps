@@ -1,0 +1,638 @@
+{
+  "apiVersion": "1.0.0",
+  "projectName": "CloudOps - Conexão e Pesquisa",
+  "description": "API para plataforma de conexão entre pesquisadores e estudantes",
+  "baseUrl": "/api/v1",
+  
+  "authentication": {
+    "type": "JWT",
+    "provider": "AWS Cognito",
+    "publicRoutes": [
+      "/auth/register",
+      "/auth/login",
+      "/auth/confirm",
+      "/auth/forgot-password",
+      "/auth/reset-password"
+    ]
+  },
+
+  "routes": {
+    "auth": {
+      "handler": "lambda/api/auth.js",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/auth/register",
+          "description": "Registrar novo usuário",
+          "requiresAuth": false,
+          "requestBody": {
+            "email": "string (required)",
+            "password": "string (required, min 8 chars)",
+            "nome": "string (required)",
+            "tipoUsuario": "enum: aluno|professor|pesquisador (required)"
+          },
+          "response": {
+            "success": { "userId": "string", "message": "string" },
+            "error": { "error": "string" }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/auth/confirm",
+          "description": "Confirmar email do usuário",
+          "requiresAuth": false,
+          "requestBody": {
+            "email": "string (required)",
+            "code": "string (required)"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/auth/login",
+          "description": "Autenticar usuário",
+          "requiresAuth": false,
+          "requestBody": {
+            "email": "string (required)",
+            "password": "string (required)"
+          },
+          "response": {
+            "success": {
+              "accessToken": "string",
+              "refreshToken": "string",
+              "idToken": "string",
+              "expiresIn": "number"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/auth/me",
+          "description": "Obter dados do usuário autenticado",
+          "requiresAuth": true,
+          "response": {
+            "userId": "string",
+            "email": "string",
+            "nome": "string",
+            "tipoUsuario": "string"
+          }
+        }
+      ]
+    },
+
+    "perfil": {
+      "handler": "lambda/api/perfil.js",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/perfil",
+          "description": "Criar perfil de usuário",
+          "requiresAuth": true,
+          "requestBody": {
+            "nome": "string (required)",
+            "email": "string (required)",
+            "tipoUsuario": "enum: aluno|professor|pesquisador (required)",
+            "instituicao": "string",
+            "escolaridade": "enum: ensino-medio|superior-incompleto|superior-completo|pos-graduacao|mestrado|doutorado|pos-doutorado",
+            "areasInteresse": "array<string>",
+            "habilidades": "array<string>",
+            "idiomas": "array<string>",
+            "numPublicacoes": "number",
+            "lattes": "string (URL)",
+            "bio": "string",
+            "foto": "string (URL)"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/perfil/{userId}",
+          "description": "Obter perfil por ID",
+          "requiresAuth": true,
+          "pathParameters": {
+            "userId": "string (required)"
+          },
+          "response": {
+            "userId": "string",
+            "nome": "string",
+            "email": "string",
+            "tipoUsuario": "string",
+            "instituicao": "string",
+            "escolaridade": "string",
+            "areasInteresse": "array<string>",
+            "habilidades": "array<string>",
+            "idiomas": "array<string>",
+            "numPublicacoes": "number",
+            "lattes": "string",
+            "bio": "string",
+            "foto": "string",
+            "createdAt": "string (ISO date)",
+            "updatedAt": "string (ISO date)"
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/perfil/{userId}",
+          "description": "Atualizar perfil",
+          "requiresAuth": true,
+          "authorization": "owner-only",
+          "pathParameters": {
+            "userId": "string (required)"
+          }
+        },
+        {
+          "method": "DELETE",
+          "path": "/perfil/{userId}",
+          "description": "Desativar perfil (soft delete)",
+          "requiresAuth": true,
+          "authorization": "owner-only"
+        },
+        {
+          "method": "GET",
+          "path": "/perfil",
+          "description": "Listar perfis",
+          "requiresAuth": true,
+          "queryParameters": {
+            "tipo": "enum: aluno|professor|pesquisador (optional)",
+            "limit": "number (optional, default 20)",
+            "lastKey": "string (optional, for pagination)"
+          }
+        }
+      ]
+    },
+
+    "pesquisa": {
+      "handler": "lambda/api/pesquisa.js",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/pesquisa",
+          "description": "Criar nova pesquisa",
+          "requiresAuth": true,
+          "authorization": "professor-only",
+          "requestBody": {
+            "titulo": "string (required)",
+            "descricao": "string",
+            "areas": "array<string> (required)",
+            "habilidadesTecnicas": "array<string>",
+            "idiomas": "array<string>",
+            "escolaridadeMinima": "enum (optional)",
+            "historicoPublicacao": "number (optional)",
+            "minParticipantes": "number (required)",
+            "maxParticipantes": "number (required)",
+            "imprescindivel": "array<string> (items: areas|escolaridade|publicacoes|idiomas|habilidades)"
+          },
+          "response": {
+            "pesquisaId": "string",
+            "professorId": "string",
+            "professorNome": "string",
+            "titulo": "string",
+            "status": "string",
+            "createdAt": "string"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/pesquisa/{pesquisaId}",
+          "description": "Obter pesquisa por ID",
+          "requiresAuth": true,
+          "pathParameters": {
+            "pesquisaId": "string (required)"
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/pesquisa/{pesquisaId}",
+          "description": "Atualizar pesquisa",
+          "requiresAuth": true,
+          "authorization": "owner-only"
+        },
+        {
+          "method": "DELETE",
+          "path": "/pesquisa/{pesquisaId}",
+          "description": "Deletar pesquisa (soft delete)",
+          "requiresAuth": true,
+          "authorization": "owner-only"
+        },
+        {
+          "method": "GET",
+          "path": "/pesquisa",
+          "description": "Listar pesquisas",
+          "requiresAuth": true,
+          "queryParameters": {
+            "professorId": "string (optional) - Filtrar por professor",
+            "status": "enum: ativa|votacao-aberta|grupo-formado|finalizada|inativa (optional)",
+            "area": "string (optional)",
+            "limit": "number (optional)",
+            "lastKey": "string (optional)"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/pesquisa/{pesquisaId}/candidatar",
+          "description": "Candidatar-se a uma pesquisa",
+          "requiresAuth": true,
+          "pathParameters": {
+            "pesquisaId": "string (required)"
+          },
+          "requestBody": {
+            "candidatoId": "string (required)"
+          },
+          "sideEffects": [
+            "Adiciona candidato à lista de candidatos da pesquisa",
+            "Envia notificação ao professor responsável",
+            "Se atingir mínimo de candidatos, pode disparar trigger de votação"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/pesquisa/{pesquisaId}/candidatos",
+          "description": "Listar candidatos de uma pesquisa",
+          "requiresAuth": true,
+          "authorization": "owner-only",
+          "response": {
+            "pesquisaId": "string",
+            "totalCandidatos": "number",
+            "candidatos": [
+              {
+                "userId": "string",
+                "nome": "string",
+                "instituicao": "string",
+                "escolaridade": "string",
+                "areasInteresse": "array<string>",
+                "score": "number (compatibilidade)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    "matching": {
+      "handler": "lambda/api/matching.js",
+      "description": "Engine de matching entre perfis e pesquisas",
+      "algorithm": {
+        "weights": {
+          "areas": 30,
+          "escolaridade": 20,
+          "publicacoes": 15,
+          "idiomas": 15,
+          "habilidades": 20
+        },
+        "imprescindibilidade": "Se um requisito é marcado como imprescindível e não é 100% atendido, o candidato é desclassificado"
+      },
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/matches/{pesquisaId}",
+          "description": "Encontrar matches para uma pesquisa",
+          "requiresAuth": true,
+          "authorization": "owner-only",
+          "response": {
+            "pesquisaId": "string",
+            "titulo": "string",
+            "totalAnalyzed": "number",
+            "totalCompatible": "number",
+            "needsRefining": "boolean",
+            "matches": [
+              {
+                "userId": "string",
+                "nome": "string",
+                "score": "number (0-100)",
+                "breakdown": {
+                  "areas": "number",
+                  "escolaridade": "number",
+                  "publicacoes": "number",
+                  "idiomas": "number",
+                  "habilidades": "number"
+                },
+                "isCompatible": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/matches/user/{userId}",
+          "description": "Encontrar pesquisas compatíveis para um usuário",
+          "requiresAuth": true,
+          "response": {
+            "userId": "string",
+            "nome": "string",
+            "totalMatches": "number",
+            "matches": [
+              {
+                "pesquisaId": "string",
+                "titulo": "string",
+                "professorId": "string",
+                "professorNome": "string",
+                "score": "number",
+                "status": "enum: pendente|aceito|rejeitado"
+              }
+            ]
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/matches/accept",
+          "description": "Aceitar um match (candidatar-se)",
+          "requiresAuth": true,
+          "requestBody": {
+            "pesquisaId": "string (required)",
+            "userId": "string (required)"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/matches/reject",
+          "description": "Rejeitar um match",
+          "requiresAuth": true,
+          "requestBody": {
+            "pesquisaId": "string (required)",
+            "userId": "string (required)"
+          }
+        }
+      ]
+    },
+
+    "votacao": {
+      "handler": "lambda/api/votacao.js",
+      "description": "Sistema de votação estilo Tinder para formação de grupos",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/votacao/iniciar",
+          "description": "Iniciar votação para uma pesquisa",
+          "requiresAuth": true,
+          "authorization": "owner-only",
+          "requestBody": {
+            "pesquisaId": "string (required)",
+            "candidatos": "array<string> (required) - Lista de userIds"
+          },
+          "sideEffects": [
+            "Atualiza status da pesquisa para 'votacao-aberta'",
+            "Notifica todos os candidatos"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/votacao/{pesquisaId}",
+          "description": "Obter status da votação",
+          "requiresAuth": true,
+          "response": {
+            "votacaoId": "string",
+            "pesquisaId": "string",
+            "status": "enum: em-andamento|finalizada",
+            "totalCandidatos": "number",
+            "votosRegistrados": "number",
+            "percentualConcluido": "number"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/votacao/{pesquisaId}/candidatos/{userId}",
+          "description": "Obter candidatos para um usuário votar",
+          "requiresAuth": true,
+          "response": {
+            "pesquisaId": "string",
+            "votosFeitos": "number",
+            "votosRestantes": "number",
+            "candidatos": [
+              {
+                "userId": "string",
+                "nome": "string",
+                "instituicao": "string",
+                "areasInteresse": "array<string>",
+                "habilidades": "array<string>"
+              }
+            ]
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/votacao/votar",
+          "description": "Registrar voto (aceitar ou rejeitar candidato)",
+          "requiresAuth": true,
+          "requestBody": {
+            "pesquisaId": "string (required)",
+            "votanteId": "string (required)",
+            "candidatoId": "string (required)",
+            "voto": "enum: aceitar|rejeitar (required)",
+            "comentario": "string (optional)"
+          },
+          "response": {
+            "message": "string",
+            "voto": "string",
+            "isMutualMatch": "boolean - Se ambos aceitaram um ao outro"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/votacao/finalizar",
+          "description": "Finalizar votação e formar grupo",
+          "requiresAuth": true,
+          "authorization": "owner-only",
+          "requestBody": {
+            "pesquisaId": "string (required)"
+          },
+          "algorithm": "Algoritmo guloso baseado em afinidade mútua",
+          "response": {
+            "grupoFormado": "boolean",
+            "totalParticipantes": "number",
+            "grupo": "array<string> - Lista de userIds selecionados",
+            "matchesMutuos": "number"
+          },
+          "sideEffects": [
+            "Atualiza status da pesquisa para 'grupo-formado' ou 'votacao-inconclusiva'",
+            "Notifica todos os participantes selecionados"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/votacao/{pesquisaId}/resultado",
+          "description": "Obter resultado final da votação",
+          "requiresAuth": true,
+          "response": {
+            "pesquisaId": "string",
+            "titulo": "string",
+            "grupoFormado": "boolean",
+            "membros": [
+              {
+                "userId": "string",
+                "nome": "string",
+                "email": "string",
+                "instituicao": "string"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    "notificacoes": {
+      "handler": "lambda/api/notificacoes.js",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/notificacao",
+          "description": "Enviar notificação",
+          "requiresAuth": true,
+          "requestBody": {
+            "userId": "string (required)",
+            "type": "enum: nova-pesquisa|match|votacao-iniciada|grupo-formado|candidatura-recebida|vaga-disponivel",
+            "title": "string (required)",
+            "message": "string (required)",
+            "pesquisaId": "string (optional)"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/notificacoes",
+          "description": "Listar notificações do usuário",
+          "requiresAuth": true,
+          "queryParameters": {
+            "userId": "string (optional, uses auth token if not provided)"
+          },
+          "response": {
+            "userId": "string",
+            "total": "number",
+            "unreadCount": "number",
+            "notifications": [
+              {
+                "notificationId": "string",
+                "type": "string",
+                "title": "string",
+                "message": "string",
+                "read": "boolean",
+                "createdAt": "string"
+              }
+            ]
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/notificacao/{id}/read",
+          "description": "Marcar notificação como lida",
+          "requiresAuth": true
+        },
+        {
+          "method": "POST",
+          "path": "/notificacao/subscribe",
+          "description": "Inscrever usuário para notificações por email",
+          "requiresAuth": true,
+          "requestBody": {
+            "email": "string (required)",
+            "userId": "string (required)"
+          }
+        }
+      ],
+      "triggers": {
+        "SNS": {
+          "description": "Processa notificações recebidas do SNS Topic",
+          "events": [
+            "nova-pesquisa",
+            "match",
+            "votacao-iniciada",
+            "grupo-formado",
+            "candidatura-recebida",
+            "vaga-disponivel"
+          ]
+        }
+      }
+    }
+  },
+
+  "notifications": {
+    "types": [
+      {
+        "type": "vaga-disponivel",
+        "trigger": "Quando uma pesquisa ainda tem vagas abertas e novos usuários compatíveis são encontrados",
+        "template": {
+          "title": "Nova vaga disponível!",
+          "message": "A pesquisa \"{titulo}\" ainda tem {vagas} vagas disponíveis. Candidate-se!"
+        }
+      },
+      {
+        "type": "match",
+        "trigger": "Quando um usuário tem alta compatibilidade com uma pesquisa",
+        "template": {
+          "title": "Novo Match! {score}% compatível",
+          "message": "Você é {score}% compatível com a pesquisa \"{titulo}\". Confira!"
+        }
+      },
+      {
+        "type": "votacao-iniciada",
+        "trigger": "Quando o professor inicia a votação",
+        "template": {
+          "title": "Votação iniciada!",
+          "message": "A votação para \"{titulo}\" começou. Você tem {dias} dias para votar."
+        }
+      },
+      {
+        "type": "grupo-formado",
+        "trigger": "Quando a votação é finalizada e o grupo é formado",
+        "template": {
+          "title": "Parabéns! Grupo Formado",
+          "message": "Você foi selecionado para participar da pesquisa \"{titulo}\"."
+        }
+      },
+      {
+        "type": "candidatura-recebida",
+        "trigger": "Quando alguém se candidata à pesquisa de um professor",
+        "template": {
+          "title": "Nova candidatura recebida",
+          "message": "{candidatoNome} se candidatou para sua pesquisa \"{titulo}\"."
+        }
+      }
+    ]
+  },
+
+  "database": {
+    "type": "DynamoDB",
+    "tables": {
+      "Users": {
+        "partitionKey": "userId",
+        "indexes": [
+          { "name": "email-index", "partitionKey": "email" },
+          { "name": "tipo-index", "partitionKey": "tipoUsuario" }
+        ]
+      },
+      "Pesquisas": {
+        "partitionKey": "pesquisaId",
+        "indexes": [
+          { "name": "professor-index", "partitionKey": "professorId" },
+          { "name": "status-index", "partitionKey": "status" }
+        ]
+      },
+      "Matches": {
+        "partitionKey": "matchId",
+        "indexes": [
+          { "name": "pesquisa-index", "partitionKey": "pesquisaId" },
+          { "name": "user-index", "partitionKey": "userId" }
+        ]
+      },
+      "Votacoes": {
+        "partitionKey": "votacaoId",
+        "indexes": [
+          { "name": "pesquisa-index", "partitionKey": "pesquisaId" }
+        ]
+      }
+    }
+  },
+
+  "frontendPages": {
+    "public": [
+      { "path": "/", "file": "index.html", "description": "Landing page" },
+      { "path": "/login", "file": "login.html", "description": "Página de login" },
+      { "path": "/cadastro-perfil", "file": "cadastro-perfil.html", "description": "Cadastro de perfil" }
+    ],
+    "protected": [
+      { "path": "/perfil", "file": "perfil.html", "description": "Meu perfil" },
+      { "path": "/usuario", "file": "usuario.html", "description": "Perfil de outro usuário (com ?id=)", "params": ["id"] },
+      { "path": "/matches", "file": "matches.html", "description": "Lista de matches" },
+      { "path": "/minhas-pesquisas", "file": "minhas-pesquisas.html", "description": "Minhas pesquisas e candidaturas" },
+      { "path": "/pesquisa", "file": "pesquisa.html", "description": "Detalhes da pesquisa (com ?id=)", "params": ["id"] },
+      { "path": "/cadastro-pesquisa", "file": "cadastro-pesquisa.html", "description": "Criar/editar pesquisa" },
+      { "path": "/oportunidades", "file": "oportunidades.html", "description": "Explorar oportunidades" },
+      { "path": "/notificacoes", "file": "notificacoes.html", "description": "Central de notificações" }
+    ]
+  }
+}

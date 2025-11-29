@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificações - CloudOps</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cloud"></i>
+                <span>CloudOps</span>
+            </a>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="matches.html">
+                        <i class="fas fa-heart"></i>
+                        <span>Matches</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="minhas-pesquisas.html">
+                        <i class="fas fa-flask"></i>
+                        <span>Minhas Pesquisas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="oportunidades.html">
+                        <i class="fas fa-search"></i>
+                        <span>Oportunidades</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="notificacoes.html">
+                        <i class="fas fa-bell"></i>
+                        <span>Notificações</span>
+                        <span class="badge" id="sidebarBadge">0</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-divider"></div>
+            
+            <ul>
+                <li>
+                    <a href="perfil.html">
+                        <i class="fas fa-user"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="Auth.logout()" class="logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <!-- Top Bar -->
+        <header class="dashboard-header">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="header-actions">
+                <button class="notification-btn active">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count" id="headerBadge">0</span>
+                </button>
+                <div class="user-menu" onclick="window.location.href='perfil.html'">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name" id="headerUserName">-</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="dashboard-content">
+            <!-- Header -->
+            <section class="page-header">
+                <div class="page-title">
+                    <h1><i class="fas fa-bell"></i> Notificações</h1>
+                    <p>Fique por dentro das novidades</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-outline" onclick="marcarTodasComoLidas()">
+                        <i class="fas fa-check-double"></i> Marcar todas como lidas
+                    </button>
+                </div>
+            </section>
+
+            <!-- Filtros -->
+            <div class="notif-filters">
+                <button class="filter-btn active" data-filter="all">
+                    Todas <span class="count" id="countAll">0</span>
+                </button>
+                <button class="filter-btn" data-filter="unread">
+                    Não lidas <span class="count" id="countUnread">0</span>
+                </button>
+                <button class="filter-btn" data-filter="match">
+                    <i class="fas fa-heart"></i> Matches
+                </button>
+                <button class="filter-btn" data-filter="vaga">
+                    <i class="fas fa-user-plus"></i> Vagas
+                </button>
+                <button class="filter-btn" data-filter="votacao">
+                    <i class="fas fa-vote-yea"></i> Votações
+                </button>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading-state" id="loadingState">
+                <div class="spinner"></div>
+                <p>Carregando notificações...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state hidden" id="emptyState">
+                <i class="fas fa-bell-slash"></i>
+                <h2>Nenhuma notificação</h2>
+                <p>Você ainda não tem notificações.</p>
+            </div>
+
+            <!-- Notificações List -->
+            <div class="notificacoes-list hidden" id="notificacoesList">
+                <!-- Notificações serão inseridas aqui -->
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let allNotificacoes = [];
+        let currentFilter = 'all';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!Auth.isAuthenticated()) return;
+
+            setupFilters();
+            setupSidebarToggle();
+            await loadNotificacoes();
+            Auth.updateHeaderUserInfo();
+        });
+
+        async function loadNotificacoes() {
+            try {
+                const userId = Auth.getCurrentUserId();
+                
+                // Simular notificações (em produção viriam da API)
+                // const response = await api.request(`/notificacoes?userId=${userId}`);
+                
+                // Mock de notificações para demonstração
+                allNotificacoes = getMockNotificacoes();
+
+                document.getElementById('loadingState').classList.add('hidden');
+
+                updateCounts();
+                filterAndRender();
+
+            } catch (error) {
+                console.error('Erro ao carregar notificações:', error);
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('emptyState').classList.remove('hidden');
+            }
+        }
+
+        function getMockNotificacoes() {
+            return [
+                {
+                    id: '1',
+                    type: 'vaga',
+                    title: 'Nova vaga disponível!',
+                    message: 'A pesquisa "Machine Learning em Diagnóstico Médico" ainda tem 2 vagas disponíveis. Candidate-se!',
+                    pesquisaId: 'p123',
+                    read: false,
+                    createdAt: new Date(Date.now() - 1000 * 60 * 30).toISOString() // 30 min atrás
+                },
+                {
+                    id: '2',
+                    type: 'match',
+                    title: 'Novo Match! 95% compatível',
+                    message: 'Você é 95% compatível com a pesquisa "Estudo sobre Mudanças Climáticas". Confira!',
+                    pesquisaId: 'p456',
+                    read: false,
+                    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString() // 2 horas atrás
+                },
+                {
+                    id: '3',
+                    type: 'votacao',
+                    title: 'Votação iniciada!',
+                    message: 'A votação para "Análise de Dados Genômicos" começou. Você tem 3 dias para votar.',
+                    pesquisaId: 'p789',
+                    read: false,
+                    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString() // 5 horas atrás
+                },
+                {
+                    id: '4',
+                    type: 'candidatura',
+                    title: 'Candidatura recebida',
+                    message: 'Maria Santos se candidatou para sua pesquisa "Impactos Ambientais".',
+                    userId: 'u123',
+                    pesquisaId: 'p111',
+                    read: true,
+                    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString() // 1 dia atrás
+                },
+                {
+                    id: '5',
+                    type: 'grupo',
+                    title: 'Grupo formado!',
+                    message: 'Parabéns! O grupo para "Robótica Educacional" foi formado com sucesso.',
+                    pesquisaId: 'p222',
+                    read: true,
+                    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString() // 2 dias atrás
+                }
+            ];
+        }
+
+        function updateCounts() {
+            const total = allNotificacoes.length;
+            const unread = allNotificacoes.filter(n => !n.read).length;
+
+            document.getElementById('countAll').textContent = total;
+            document.getElementById('countUnread').textContent = unread;
+            document.getElementById('sidebarBadge').textContent = unread;
+            document.getElementById('headerBadge').textContent = unread;
+        }
+
+        function filterAndRender() {
+            let filtered = [...allNotificacoes];
+
+            if (currentFilter === 'unread') {
+                filtered = filtered.filter(n => !n.read);
+            } else if (currentFilter !== 'all') {
+                filtered = filtered.filter(n => n.type === currentFilter);
+            }
+
+            if (filtered.length === 0) {
+                document.getElementById('notificacoesList').classList.add('hidden');
+                document.getElementById('emptyState').classList.remove('hidden');
+            } else {
+                document.getElementById('emptyState').classList.add('hidden');
+                document.getElementById('notificacoesList').classList.remove('hidden');
+                renderNotificacoes(filtered);
+            }
+        }
+
+        function renderNotificacoes(notificacoes) {
+            const container = document.getElementById('notificacoesList');
+
+            container.innerHTML = notificacoes.map(n => `
+                <div class="notificacao-item ${n.read ? '' : 'unread'}" data-id="${n.id}">
+                    <div class="notif-icon ${n.type}">
+                        ${getNotifIcon(n.type)}
+                    </div>
+                    <div class="notif-content">
+                        <h4>${n.title}</h4>
+                        <p>${n.message}</p>
+                        <span class="notif-time">${formatTimeAgo(n.createdAt)}</span>
+                    </div>
+                    <div class="notif-actions">
+                        ${getNotifActions(n)}
+                        ${!n.read ? `
+                            <button class="btn-icon" onclick="marcarComoLida('${n.id}')" title="Marcar como lida">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getNotifIcon(type) {
+            const icons = {
+                'match': '<i class="fas fa-heart"></i>',
+                'vaga': '<i class="fas fa-user-plus"></i>',
+                'votacao': '<i class="fas fa-vote-yea"></i>',
+                'candidatura': '<i class="fas fa-paper-plane"></i>',
+                'grupo': '<i class="fas fa-users"></i>',
+                'sistema': '<i class="fas fa-info-circle"></i>'
+            };
+            return icons[type] || icons['sistema'];
+        }
+
+        function getNotifActions(notif) {
+            if (notif.pesquisaId) {
+                return `<a href="pesquisa.html?id=${notif.pesquisaId}" class="btn btn-sm btn-outline">Ver</a>`;
+            }
+            if (notif.userId) {
+                return `<a href="usuario.html?id=${notif.userId}" class="btn btn-sm btn-outline">Ver Perfil</a>`;
+            }
+            return '';
+        }
+
+        function formatTimeAgo(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (minutes < 60) return `Há ${minutes} min`;
+            if (hours < 24) return `Há ${hours} hora${hours > 1 ? 's' : ''}`;
+            if (days < 7) return `Há ${days} dia${days > 1 ? 's' : ''}`;
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        function setupFilters() {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    filterAndRender();
+                });
+            });
+        }
+
+        async function marcarComoLida(id) {
+            const notif = allNotificacoes.find(n => n.id === id);
+            if (notif) {
+                notif.read = true;
+                updateCounts();
+                filterAndRender();
+
+                // Em produção: await api.request(`/notificacao/${id}/read`, { method: 'PUT' });
+            }
+        }
+
+        async function marcarTodasComoLidas() {
+            allNotificacoes.forEach(n => n.read = true);
+            updateCounts();
+            filterAndRender();
+            showNotification('Todas as notificações foram marcadas como lidas', 'success');
+
+            // Em produção: await api.request('/notificacoes/read-all', { method: 'PUT' });
+        }
+
+        function setupSidebarToggle() {
+            const toggle = document.querySelector('.sidebar-toggle');
+            if (toggle) {
+                toggle.addEventListener('click', () => {
+                    document.querySelector('.sidebar').classList.toggle('collapsed');
+                });
+            }
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `<i class="fas fa-check-circle"></i><span>${message}</span>`;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.classList.add('show'), 10);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+
+    <style>
+        .notif-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .filter-btn .count {
+            background: rgba(0,0,0,0.1);
+            padding: 0.125rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+
+        .filter-btn.active .count {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .notificacoes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .notificacao-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+        }
+
+        .notificacao-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .notificacao-item.unread {
+            border-left: 4px solid var(--primary-color);
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.05), var(--card-bg));
+        }
+
+        .notif-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .notif-icon.match { background: var(--danger-light); color: var(--danger-color); }
+        .notif-icon.vaga { background: var(--success-light); color: var(--success-color); }
+        .notif-icon.votacao { background: var(--warning-light); color: var(--warning-color); }
+        .notif-icon.candidatura { background: var(--primary-light); color: var(--primary-color); }
+        .notif-icon.grupo { background: var(--info-light); color: var(--info-color); }
+        .notif-icon.sistema { background: var(--bg-secondary); color: var(--text-secondary); }
+
+        .notif-content {
+            flex: 1;
+        }
+
+        .notif-content h4 {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .notif-content p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .notif-time {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .notif-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title h1 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .loading-state, .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--text-tertiary);
+            margin-bottom: 1rem;
+        }
+
+        .hidden { display: none !important; }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .notificacao-item {
+                flex-wrap: wrap;
+            }
+
+            .notif-actions {
+                width: 100%;
+                margin-top: 0.75rem;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</body>
+</html>

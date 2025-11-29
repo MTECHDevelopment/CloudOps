@@ -20,17 +20,11 @@
         
         <nav class="sidebar-nav">
             <ul>
-                <li>
-                    <a href="dashboard.html">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
                 <li class="active">
                     <a href="matches.html">
                         <i class="fas fa-heart"></i>
                         <span>Matches</span>
-                        <span class="badge">3</span>
+                        <span class="badge" id="sidebarMatchBadge">0</span>
                     </a>
                 </li>
                 <li>
@@ -43,27 +37,13 @@
                     <a href="oportunidades.html">
                         <i class="fas fa-search"></i>
                         <span>Oportunidades</span>
-                        <span class="badge">12</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="grupos.html">
-                        <i class="fas fa-users"></i>
-                        <span>Meus Grupos</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="votacoes.html">
-                        <i class="fas fa-vote-yea"></i>
-                        <span>Votações</span>
-                        <span class="badge warning">1</span>
                     </a>
                 </li>
                 <li>
                     <a href="notificacoes.html">
                         <i class="fas fa-bell"></i>
                         <span>Notificações</span>
-                        <span class="badge">5</span>
+                        <span class="badge" id="sidebarNotifBadge">0</span>
                     </a>
                 </li>
             </ul>
@@ -78,13 +58,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="configuracoes.html">
-                        <i class="fas fa-cog"></i>
-                        <span>Configurações</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="index.html" class="logout">
+                    <a href="#" onclick="Auth.logout()" class="logout">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>Sair</span>
                     </a>
@@ -101,421 +75,563 @@
                 <i class="fas fa-bars"></i>
             </button>
             
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Buscar matches...">
-            </div>
-            
             <div class="header-actions">
-                <button class="notification-btn">
+                <button class="notification-btn" onclick="window.location.href='notificacoes.html'">
                     <i class="fas fa-bell"></i>
-                    <span class="notification-count">5</span>
+                    <span class="notification-count" id="headerNotifCount">0</span>
                 </button>
-                <div class="user-menu">
+                <div class="user-menu" onclick="window.location.href='perfil.html'">
                     <div class="user-avatar">
                         <i class="fas fa-user"></i>
                     </div>
-                    <span class="user-name">João Silva</span>
-                    <i class="fas fa-chevron-down"></i>
+                    <span class="user-name" id="headerUserName">-</span>
                 </div>
             </div>
         </header>
 
         <!-- Matches Content -->
         <div class="dashboard-content">
+            <!-- Header Section -->
             <section class="page-header">
                 <div class="page-title">
-                    <h1><i class="fas fa-heart"></i> Seus Matches</h1>
-                    <p>Pesquisadores compatíveis com seu perfil e pesquisas</p>
+                    <h1><i class="fas fa-heart"></i> Meus Matches</h1>
+                    <p>Pesquisas compatíveis com seu perfil</p>
                 </div>
                 <div class="page-filters">
-                    <select class="filter-select">
-                        <option value="all">Todas as pesquisas</option>
-                        <option value="pesquisa1">Impactos Ambientais</option>
-                        <option value="pesquisa2">ML em Diagnóstico</option>
+                    <select id="filterStatus" onchange="filterMatches()">
+                        <option value="all">Todos os status</option>
+                        <option value="pendente">Pendentes</option>
+                        <option value="aceito">Aceitos</option>
+                        <option value="rejeitado">Rejeitados</option>
                     </select>
-                    <select class="filter-select">
+                    <select id="filterSort" onchange="filterMatches()">
                         <option value="score">Maior compatibilidade</option>
                         <option value="recent">Mais recentes</option>
-                        <option value="area">Por área</option>
                     </select>
                 </div>
             </section>
 
-            <!-- Matches Grid - Tinder Style -->
-            <section class="matches-container">
-                <!-- Match Card Stack -->
-                <div class="match-stack" id="matchStack">
-                    <!-- Card 1 -->
-                    <div class="match-card" data-id="1">
-                        <div class="match-card-header">
-                            <div class="match-percentage">
-                                <span class="percentage">98%</span>
-                                <span class="label">Match</span>
-                            </div>
-                            <div class="match-badge new">Novo</div>
-                        </div>
-                        
-                        <div class="match-card-avatar">
-                            <i class="fas fa-user-graduate"></i>
-                        </div>
-                        
-                        <div class="match-card-info">
-                            <h3>Maria Santos</h3>
-                            <p class="match-role">Doutoranda em Biologia Molecular</p>
-                            <p class="match-institution"><i class="fas fa-university"></i> USP - São Paulo</p>
-                            
-                            <div class="match-tags">
-                                <span class="tag match-tag">Genética</span>
-                                <span class="tag match-tag">Bioquímica</span>
-                                <span class="tag match-tag">Python</span>
-                            </div>
-                            
-                            <div class="match-stats">
-                                <div class="match-stat">
-                                    <i class="fas fa-book"></i>
-                                    <span>12 publicações</span>
-                                </div>
-                                <div class="match-stat">
-                                    <i class="fas fa-language"></i>
-                                    <span>Inglês Fluente</span>
-                                </div>
-                            </div>
-                            
-                            <div class="compatibility-breakdown">
-                                <h4>Compatibilidade</h4>
-                                <div class="compatibility-item">
-                                    <span class="comp-label">Área de Interesse</span>
-                                    <div class="comp-bar">
-                                        <div class="comp-fill" style="width: 100%"></div>
-                                    </div>
-                                    <span class="comp-value">100%</span>
-                                </div>
-                                <div class="compatibility-item">
-                                    <span class="comp-label">Habilidades</span>
-                                    <div class="comp-bar">
-                                        <div class="comp-fill" style="width: 95%"></div>
-                                    </div>
-                                    <span class="comp-value">95%</span>
-                                </div>
-                                <div class="compatibility-item">
-                                    <span class="comp-label">Idiomas</span>
-                                    <div class="comp-bar">
-                                        <div class="comp-fill" style="width: 100%"></div>
-                                    </div>
-                                    <span class="comp-value">100%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="match-card-actions">
-                            <button class="action-btn reject" onclick="rejectMatch(1)">
-                                <i class="fas fa-times"></i>
-                            </button>
-                            <button class="action-btn info" onclick="viewProfile(1)">
-                                <i class="fas fa-info"></i>
-                            </button>
-                            <button class="action-btn accept" onclick="acceptMatch(1)">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                        </div>
-                    </div>
+            <!-- Loading State -->
+            <div class="loading-state" id="loadingState">
+                <div class="spinner"></div>
+                <p>Carregando matches...</p>
+            </div>
 
-                    <!-- Card 2 -->
-                    <div class="match-card" data-id="2">
-                        <div class="match-card-header">
-                            <div class="match-percentage">
-                                <span class="percentage">95%</span>
-                                <span class="label">Match</span>
-                            </div>
-                        </div>
-                        
-                        <div class="match-card-avatar professor">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        
-                        <div class="match-card-info">
-                            <h3>Prof. Carlos Oliveira</h3>
-                            <p class="match-role">Professor Titular - Física Quântica</p>
-                            <p class="match-institution"><i class="fas fa-university"></i> UNICAMP - Campinas</p>
-                            
-                            <div class="match-tags">
-                                <span class="tag match-tag">Física</span>
-                                <span class="tag match-tag">Computação Quântica</span>
-                                <span class="tag match-tag">MATLAB</span>
-                            </div>
-                            
-                            <div class="match-stats">
-                                <div class="match-stat">
-                                    <i class="fas fa-book"></i>
-                                    <span>87 publicações</span>
-                                </div>
-                                <div class="match-stat">
-                                    <i class="fas fa-award"></i>
-                                    <span>CNPq 1A</span>
-                                </div>
-                            </div>
-                            
-                            <div class="compatibility-breakdown">
-                                <h4>Compatibilidade</h4>
-                                <div class="compatibility-item">
-                                    <span class="comp-label">Área de Interesse</span>
-                                    <div class="comp-bar">
-                                        <div class="comp-fill" style="width: 90%"></div>
-                                    </div>
-                                    <span class="comp-value">90%</span>
-                                </div>
-                                <div class="compatibility-item">
-                                    <span class="comp-label">Habilidades</span>
-                                    <div class="comp-bar">
-                                        <div class="comp-fill" style="width: 95%"></div>
-                                    </div>
-                                    <span class="comp-value">95%</span>
-                                </div>
-                                <div class="compatibility-item">
-                                    <span class="comp-label">Experiência</span>
-                                    <div class="comp-bar">
-                                        <div class="comp-fill" style="width: 100%"></div>
-                                    </div>
-                                    <span class="comp-value">100%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="match-card-actions">
-                            <button class="action-btn reject" onclick="rejectMatch(2)">
-                                <i class="fas fa-times"></i>
-                            </button>
-                            <button class="action-btn info" onclick="viewProfile(2)">
-                                <i class="fas fa-info"></i>
-                            </button>
-                            <button class="action-btn accept" onclick="acceptMatch(2)">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                        </div>
-                    </div>
+            <!-- Empty State -->
+            <div class="empty-state hidden" id="emptyState">
+                <i class="fas fa-heart-broken"></i>
+                <h2>Nenhum match encontrado</h2>
+                <p>Complete seu perfil para aumentar suas chances de encontrar pesquisas compatíveis.</p>
+                <a href="perfil.html" class="btn btn-primary">Completar Perfil</a>
+            </div>
 
-                    <!-- Card 3 -->
-                    <div class="match-card" data-id="3">
-                        <div class="match-card-header">
-                            <div class="match-percentage">
-                                <span class="percentage">92%</span>
-                                <span class="label">Match</span>
-                            </div>
-                        </div>
-                        
-                        <div class="match-card-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        
-                        <div class="match-card-info">
-                            <h3>Ana Rodrigues</h3>
-                            <p class="match-role">Mestranda em Estatística</p>
-                            <p class="match-institution"><i class="fas fa-university"></i> UFRJ - Rio de Janeiro</p>
-                            
-                            <div class="match-tags">
-                                <span class="tag match-tag">Estatística</span>
-                                <span class="tag match-tag">R</span>
-                                <span class="tag match-tag">Machine Learning</span>
-                            </div>
-                            
-                            <div class="match-stats">
-                                <div class="match-stat">
-                                    <i class="fas fa-book"></i>
-                                    <span>5 publicações</span>
-                                </div>
-                                <div class="match-stat">
-                                    <i class="fas fa-language"></i>
-                                    <span>Inglês Avançado</span>
-                                </div>
-                            </div>
-                            
-                            <div class="compatibility-breakdown">
-                                <h4>Compatibilidade</h4>
-                                <div class="compatibility-item">
-                                    <span class="comp-label">Área de Interesse</span>
-                                    <div class="comp-bar">
-                                        <div class="comp-fill" style="width: 85%"></div>
-                                    </div>
-                                    <span class="comp-value">85%</span>
-                                </div>
-                                <div class="compatibility-item">
-                                    <span class="comp-label">Habilidades</span>
-                                    <div class="comp-bar">
-                                        <div class="comp-fill" style="width: 100%"></div>
-                                    </div>
-                                    <span class="comp-value">100%</span>
-                                </div>
-                                <div class="compatibility-item">
-                                    <span class="comp-label">Disponibilidade</span>
-                                    <div class="comp-bar">
-                                        <div class="comp-fill" style="width: 90%"></div>
-                                    </div>
-                                    <span class="comp-value">90%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="match-card-actions">
-                            <button class="action-btn reject" onclick="rejectMatch(3)">
-                                <i class="fas fa-times"></i>
-                            </button>
-                            <button class="action-btn info" onclick="viewProfile(3)">
-                                <i class="fas fa-info"></i>
-                            </button>
-                            <button class="action-btn accept" onclick="acceptMatch(3)">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Accepted Matches List -->
-                <div class="accepted-matches">
-                    <h2><i class="fas fa-check-circle"></i> Matches Aceitos</h2>
-                    <p class="section-description">Pesquisadores que você demonstrou interesse</p>
-                    
-                    <div class="accepted-list" id="acceptedList">
-                        <div class="empty-state">
-                            <i class="fas fa-heart-broken"></i>
-                            <p>Você ainda não aceitou nenhum match.</p>
-                            <small>Deslize para a direita ou clique no coração para aceitar!</small>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Refine Search Alert -->
-            <div class="refine-alert" id="refineAlert" style="display: none;">
-                <div class="alert-content">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <div class="alert-text">
-                        <h4>Muitos candidatos encontrados!</h4>
-                        <p>O sistema encontrou <span id="matchCount">100</span> pessoas compatíveis. Considere refinar sua pesquisa.</p>
-                    </div>
-                    <button class="btn btn-primary" onclick="openRefineModal()">
-                        <i class="fas fa-filter"></i> Refinar Pesquisa
-                    </button>
-                </div>
+            <!-- Matches List -->
+            <div class="matches-grid hidden" id="matchesGrid">
+                <!-- Matches serão inseridos dinamicamente -->
             </div>
         </div>
     </main>
 
-    <!-- Profile Modal -->
-    <div id="profileModal" class="modal">
-        <div class="modal-content modal-lg">
-            <button class="modal-close" onclick="closeProfileModal()">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="profile-modal-content">
-                <div class="profile-modal-header">
-                    <div class="profile-avatar large">
-                        <i class="fas fa-user-graduate"></i>
-                    </div>
-                    <div class="profile-info">
-                        <h2 id="modalProfileName">Maria Santos</h2>
-                        <p id="modalProfileRole">Doutoranda em Biologia Molecular</p>
-                        <p id="modalProfileInstitution"><i class="fas fa-university"></i> USP - São Paulo</p>
-                    </div>
-                    <div class="profile-match-score">
-                        <span class="score">98%</span>
-                        <span class="label">Match</span>
-                    </div>
-                </div>
-                
-                <div class="profile-modal-body">
-                    <div class="profile-section">
-                        <h3><i class="fas fa-star"></i> Áreas de Interesse</h3>
-                        <div class="profile-tags">
-                            <span class="tag">Genética</span>
-                            <span class="tag">Bioquímica</span>
-                            <span class="tag">Biologia Molecular</span>
-                        </div>
-                    </div>
-                    
-                    <div class="profile-section">
-                        <h3><i class="fas fa-tools"></i> Habilidades Técnicas</h3>
-                        <div class="profile-tags">
-                            <span class="tag">Python</span>
-                            <span class="tag">R</span>
-                            <span class="tag">SPSS</span>
-                            <span class="tag">Análise de Dados</span>
-                        </div>
-                    </div>
-                    
-                    <div class="profile-section">
-                        <h3><i class="fas fa-book"></i> Publicações</h3>
-                        <p><strong>12 publicações</strong> em periódicos indexados</p>
-                        <a href="#" class="link"><i class="fas fa-external-link-alt"></i> Ver Currículo Lattes</a>
-                    </div>
-                    
-                    <div class="profile-section">
-                        <h3><i class="fas fa-language"></i> Idiomas</h3>
-                        <ul class="idiomas-list">
-                            <li><span class="idioma">Português</span> <span class="nivel">Nativo</span></li>
-                            <li><span class="idioma">Inglês</span> <span class="nivel">Fluente</span></li>
-                            <li><span class="idioma">Espanhol</span> <span class="nivel">Intermediário</span></li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="profile-modal-actions">
-                    <button class="btn btn-outline" onclick="closeProfileModal()">Fechar</button>
-                    <button class="btn btn-primary" onclick="acceptMatchFromModal()">
-                        <i class="fas fa-heart"></i> Aceitar Match
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let allMatches = [];
 
-    <!-- Refine Modal -->
-    <div id="refineModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeRefineModal()">
-                <i class="fas fa-times"></i>
-            </button>
-            <h2><i class="fas fa-filter"></i> Refinar Pesquisa</h2>
-            <p>Adicione filtros para encontrar candidatos mais específicos</p>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!Auth.isAuthenticated()) {
+                return;
+            }
+
+            await loadMatches();
+            setupSidebarToggle();
+            Auth.updateHeaderUserInfo();
+        });
+
+        async function loadMatches() {
+            try {
+                const userId = Auth.getCurrentUserId();
+                const response = await api.findMatchesForUser(userId);
+                
+                allMatches = response.matches || [];
+                
+                document.getElementById('loadingState').classList.add('hidden');
+                
+                if (allMatches.length === 0) {
+                    document.getElementById('emptyState').classList.remove('hidden');
+                } else {
+                    document.getElementById('matchesGrid').classList.remove('hidden');
+                    renderMatches(allMatches);
+                }
+
+                // Atualizar badges
+                document.getElementById('sidebarMatchBadge').textContent = allMatches.length;
+
+            } catch (error) {
+                console.error('Erro ao carregar matches:', error);
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('emptyState').classList.remove('hidden');
+            }
+        }
+
+        function renderMatches(matches) {
+            const container = document.getElementById('matchesGrid');
             
-            <form class="refine-form">
-                <div class="form-group">
-                    <label>Experiência Mínima (anos)</label>
-                    <input type="number" name="experiencia" min="0" max="50" value="0">
-                </div>
-                
-                <div class="form-group">
-                    <label>Localização</label>
-                    <input type="text" name="localizacao" placeholder="Ex: São Paulo, SP">
-                </div>
-                
-                <div class="form-group">
-                    <label>Disponibilidade</label>
-                    <select name="disponibilidade">
-                        <option value="">Qualquer</option>
-                        <option value="integral">Tempo Integral</option>
-                        <option value="parcial">Tempo Parcial</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Idioma Obrigatório</label>
-                    <select name="idioma">
-                        <option value="">Qualquer</option>
-                        <option value="ingles">Inglês Fluente</option>
-                        <option value="espanhol">Espanhol Fluente</option>
-                    </select>
-                </div>
-                
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-outline" onclick="closeRefineModal()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
-                </div>
-            </form>
-        </div>
-    </div>
+            container.innerHTML = matches.map(match => `
+                <div class="match-card" data-id="${match.pesquisaId}" data-status="${match.status || 'pendente'}">
+                    <div class="match-card-header">
+                        <div class="match-score-badge ${getScoreClass(match.score)}">
+                            <span class="score-value">${match.score}%</span>
+                            <span class="score-label">Match</span>
+                        </div>
+                        <span class="match-status ${match.status || 'pendente'}">${formatStatus(match.status)}</span>
+                    </div>
+                    
+                    <div class="match-card-body">
+                        <h3 class="match-title">${match.titulo}</h3>
+                        <p class="match-description">${match.descricao || 'Sem descrição'}</p>
+                        
+                        <div class="match-professor">
+                            <div class="professor-avatar">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="professor-info">
+                                <span class="professor-name">${match.professorNome || 'Professor'}</span>
+                                <span class="professor-institution">${match.instituicao || '-'}</span>
+                            </div>
+                            <a href="usuario.html?id=${match.professorId}" class="btn btn-sm btn-outline" title="Ver perfil">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="match-tags">
+                            ${(match.areas || []).slice(0, 3).map(area => `<span class="tag">${area}</span>`).join('')}
+                            ${(match.areas || []).length > 3 ? `<span class="tag more">+${match.areas.length - 3}</span>` : ''}
+                        </div>
 
-    <script src="js/app.js"></script>
-    <script src="js/matches.js"></script>
+                        <div class="match-compatibility">
+                            <h4>Compatibilidade</h4>
+                            <div class="compatibility-bars">
+                                ${renderCompatibilityBar('Áreas', match.breakdown?.areas)}
+                                ${renderCompatibilityBar('Escolaridade', match.breakdown?.escolaridade)}
+                                ${renderCompatibilityBar('Habilidades', match.breakdown?.habilidades)}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="match-card-actions">
+                        ${match.status === 'pendente' || !match.status ? `
+                            <button class="btn btn-outline btn-reject" onclick="rejectMatch('${match.pesquisaId}')">
+                                <i class="fas fa-times"></i> Rejeitar
+                            </button>
+                            <button class="btn btn-primary btn-accept" onclick="acceptMatch('${match.pesquisaId}')">
+                                <i class="fas fa-check"></i> Aceitar
+                            </button>
+                        ` : `
+                            <a href="pesquisa.html?id=${match.pesquisaId}" class="btn btn-outline full-width">
+                                <i class="fas fa-eye"></i> Ver Detalhes
+                            </a>
+                        `}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCompatibilityBar(label, value) {
+            const score = value || 0;
+            return `
+                <div class="compat-bar-item">
+                    <div class="compat-bar-header">
+                        <span>${label}</span>
+                        <span>${score}%</span>
+                    </div>
+                    <div class="compat-bar">
+                        <div class="compat-bar-fill ${getScoreClass(score)}" style="width: ${score}%"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getScoreClass(score) {
+            if (score >= 90) return 'excellent';
+            if (score >= 70) return 'good';
+            if (score >= 50) return 'moderate';
+            return 'low';
+        }
+
+        function formatStatus(status) {
+            const statuses = {
+                'pendente': 'Pendente',
+                'aceito': 'Aceito',
+                'rejeitado': 'Rejeitado'
+            };
+            return statuses[status] || 'Pendente';
+        }
+
+        function filterMatches() {
+            const status = document.getElementById('filterStatus').value;
+            const sort = document.getElementById('filterSort').value;
+
+            let filtered = [...allMatches];
+
+            if (status !== 'all') {
+                filtered = filtered.filter(m => (m.status || 'pendente') === status);
+            }
+
+            if (sort === 'score') {
+                filtered.sort((a, b) => b.score - a.score);
+            } else if (sort === 'recent') {
+                filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            }
+
+            if (filtered.length === 0) {
+                document.getElementById('matchesGrid').classList.add('hidden');
+                document.getElementById('emptyState').classList.remove('hidden');
+            } else {
+                document.getElementById('matchesGrid').classList.remove('hidden');
+                document.getElementById('emptyState').classList.add('hidden');
+                renderMatches(filtered);
+            }
+        }
+
+        async function acceptMatch(pesquisaId) {
+            try {
+                const userId = Auth.getCurrentUserId();
+                await api.acceptMatch({ pesquisaId, userId });
+                
+                showNotification('Match aceito! Você agora é um candidato.', 'success');
+                
+                // Atualizar lista
+                const match = allMatches.find(m => m.pesquisaId === pesquisaId);
+                if (match) match.status = 'aceito';
+                
+                filterMatches();
+
+            } catch (error) {
+                console.error('Erro ao aceitar match:', error);
+                showNotification('Erro ao aceitar match', 'error');
+            }
+        }
+
+        async function rejectMatch(pesquisaId) {
+            try {
+                const userId = Auth.getCurrentUserId();
+                await api.rejectMatch({ pesquisaId, userId });
+                
+                showNotification('Match rejeitado', 'info');
+                
+                // Atualizar lista
+                const match = allMatches.find(m => m.pesquisaId === pesquisaId);
+                if (match) match.status = 'rejeitado';
+                
+                filterMatches();
+
+            } catch (error) {
+                console.error('Erro ao rejeitar match:', error);
+                showNotification('Erro ao rejeitar match', 'error');
+            }
+        }
+
+        function setupSidebarToggle() {
+            const toggle = document.querySelector('.sidebar-toggle');
+            if (toggle) {
+                toggle.addEventListener('click', () => {
+                    document.querySelector('.sidebar').classList.toggle('collapsed');
+                });
+            }
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.classList.add('show'), 10);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+
+    <style>
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .match-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .match-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .match-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .match-score-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+        }
+
+        .match-score-badge .score-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .match-score-badge .score-label {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .match-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .match-status.pendente { background: rgba(255,255,255,0.2); color: white; }
+        .match-status.aceito { background: var(--success-color); color: white; }
+        .match-status.rejeitado { background: var(--danger-color); color: white; }
+
+        .match-card-body {
+            padding: 1.5rem;
+        }
+
+        .match-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .match-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .match-professor {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .professor-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .professor-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .professor-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .professor-institution {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .match-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .match-compatibility h4 {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .compatibility-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .compat-bar-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .compat-bar-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .compat-bar {
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .compat-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .compat-bar-fill.excellent { background: var(--success-color); }
+        .compat-bar-fill.good { background: var(--primary-color); }
+        .compat-bar-fill.moderate { background: var(--warning-color); }
+        .compat-bar-fill.low { background: var(--danger-color); }
+
+        .match-card-actions {
+            display: flex;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .match-card-actions .btn {
+            flex: 1;
+        }
+
+        .btn.full-width {
+            width: 100%;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-title h1 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.75rem;
+            color: var(--text-primary);
+        }
+
+        .page-title p {
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .page-filters {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .page-filters select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .loading-state, .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--text-tertiary);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h2 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .matches-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                flex-direction: column;
+            }
+
+            .page-filters {
+                width: 100%;
+            }
+
+            .page-filters select {
+                flex: 1;
+            }
+        }
+    </style>
 </body>
 </html>
