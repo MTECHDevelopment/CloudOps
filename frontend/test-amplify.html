@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo - Amplify Data</title>
+</head>
+
+<body>
+    <h1>CloudOps - Amplify Gen 2 Integration</h1>
+
+    <div id="app">
+        <h2>Users</h2>
+        <button id="loadUsers">Load Users</button>
+        <div id="usersList"></div>
+
+        <h2>Projects</h2>
+        <button id="loadProjects">Load Projects</button>
+        <div id="projectsList"></div>
+    </div>
+
+    <!-- Amplify Configuration -->
+    <script type="module">
+        // Import Amplify configuration
+        import './js/amplify-config.js';
+
+        // Import data client functions
+        import { listUsers, listProjects } from './js/data-client.js';
+
+        // Load users
+        document.getElementById('loadUsers').addEventListener('click', async () => {
+            try {
+                const users = await listUsers();
+                const usersList = document.getElementById('usersList');
+                usersList.innerHTML = '<pre>' + JSON.stringify(users, null, 2) + '</pre>';
+            } catch (error) {
+                console.error('Error loading users:', error);
+                alert('Error loading users: ' + error.message);
+            }
+        });
+
+        // Load projects
+        document.getElementById('loadProjects').addEventListener('click', async () => {
+            try {
+                const projects = await listProjects();
+                const projectsList = document.getElementById('projectsList');
+                projectsList.innerHTML = '<pre>' + JSON.stringify(projects, null, 2) + '</pre>';
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                alert('Error loading projects: ' + error.message);
+            }
+        });
+    </script>
+</body>
+
+</html>
